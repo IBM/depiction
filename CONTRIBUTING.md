@@ -1,4 +1,5 @@
 ## Contributing In General
+
 Our project welcomes external contributions. If you have an itch, please feel
 free to scratch it.
 
@@ -45,25 +46,52 @@ must include a sign-off statement in the commit message.
 Here is an example Signed-off-by line, which indicates that the
 submitter accepts the DCO:
 
-```
+```console
 Signed-off-by: Jane Doe <jane.doe@example.com>
 ```
 
 You can include this automatically when you commit a change to your
 local git repository using the following command:
 
-```
+```sh
 git commit -s
 ```
 
 ## Communication
+
 Please feel free to connect with us via email, see the [MAINTAINERS.md](MAINTAINERS.md) page.
 
 ## Setup
-**TODO**
+
+Setup a conda environment
+
+```sh
+conda env create -f environment.yml
+```
+
+Activate it:
+
+```sh
+conda activate depiction-env
+```
+
+Install the module in editable mode:
+
+```sh
+pip install -e .
+```
+
+Optionally, install a `jupiter` playground:
+
+```sh
+pip install jupyter
+ipython kernel install --user --name=depiction-development
+```
 
 ## Testing
+
 **TODO**
 
 ## Coding style guidelines
-**TODO**
+
+We try to follow PEP8 styling.
