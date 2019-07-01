@@ -1,0 +1,10 @@
+name: depiction-env
+channels:
+  - https://conda.anaconda.org/rdkit
+dependencies:
+  - rdkit=2018.09.1
+  - pip:
+    - spacy==2.1.4
+    - pandas==0.24.2
+    - tensorflow==1.14.0
+    - seaborn==0.9.0
