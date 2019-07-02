@@ -5,7 +5,8 @@ services:
 
 install:
   - sudo apt-get install --allow-unauthenticated python3-pip
-  - sudo pip3 install docker-compose
+  - pip3 install -U pip
+  - pip3 install docker-compose
 
 script:
   - docker-compose -f docker/docker-compose.yml build
