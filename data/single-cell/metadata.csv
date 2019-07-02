@@ -1,0 +1,21 @@
+label,cell type name
+1,CD11b- Monocyte
+2,CD11bhi Monocyte
+3,CD11bmid Monocyte
+4,Erythroblast
+5,HSC
+6,Immature B
+7,Mature CD38lo B
+8,Mature CD38mid B
+9,Mature CD4+ T
+10,Mature CD8+ T
+11,Megakaryocyte
+12,Myelocyte
+13,NK
+14,Naive CD4+ T
+15,Naive CD8+ T
+16,Plasma cell
+17,Plasmacytoid DC
+18,Platelet
+19,Pre-B II
+20,Pre-B I
