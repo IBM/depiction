@@ -1,0 +1,20 @@
+sudo: required
+
+services:
+  - docker
+
+install:
+  - sudo apt-get install --allow-unauthenticated python3-pip
+  - sudo pip3 install docker-compose
+
+script:
+  - docker-compose -f docker/docker-compose.yml build
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: sh .travis/deploy.sh
+  on: 
+    branches:
+      only:
+        - master
