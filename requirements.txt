@@ -2,3 +2,4 @@ spacy == 2.1.4
 pandas == 0.24.2
 tensorflow == 1.14.0
 seaborn == 0.9.0
+paccmann @ git+https://github.com/drugilsberg/paccmann@fae75a1568e58058683031cfa41337c4acb684d1#egg=paccmann-0.1
