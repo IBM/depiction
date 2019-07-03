@@ -3,9 +3,7 @@ channels:
   - https://conda.anaconda.org/rdkit
 dependencies:
   - rdkit=2018.09.1
-  - scikit-learn
-  - jupyter
-  - python=3.7
+  - python>=3.6
   - pip
   - pip:
     - spacy==2.1.4
