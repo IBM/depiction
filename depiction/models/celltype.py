@@ -5,7 +5,7 @@ from tensorflow.keras.utils import to_categorical
 
 
 def one_hot_encoding(classes):
-    return to_categorical(classes)[:, 1:] # remove category 0
+    return to_categorical(classes)[:, 1:]  # remove category 0
 
 
 def one_hot_decoding(labels):
@@ -36,17 +36,20 @@ class CellTyper(Model):
         19: 'Pre-B II',
         20: 'Pre-B I'}
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, filename='celltype_dnn_model.h5',
+                 origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',
+                 *args, **kwargs):
         """Initalize the Model."""
-        super(__class__).__init__(self, Task.CLASSIFICATION, *args, **kwargs)
-        # TODO wget model.h5
-        self.model = keras.models.load_model('../data/models/celltype_dnn_model.h5')
+        super().__init__(
+            Task.CLASSIFICATION, filename, origin, *args, **kwargs
+        )
+        self.model = keras.models.load_model(self.model_path)
 
     def predict(self, sample, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
         arameters.
-        
+
         Arguments:
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
@@ -54,12 +57,14 @@ class CellTyper(Model):
         Returns
             a prediction for the model on the given sample.
         """
-        y = self.model.predict(
+        return self.model.predict(
             sample,
             batch_size=None, verbose=0, steps=None, callbacks=None
         )
-        return one_hot_decoding(y)
 
     @staticmethod
-    def to_cellnames(predictions):
-        return [CellTyper.celltype_names[category] for category in predictions]
+    def logits_to_celltype(predictions):
+        return [
+            CellTyper.celltype_names[category] for
+            category in one_hot_decoding(predictions)
+        ]
