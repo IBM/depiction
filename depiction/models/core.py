@@ -1,10 +1,11 @@
 """Core utilities and classes for model handling."""
-from ..core import Task
+from ..core import Task, DataType
+
 
 class Model(object):
     """Abstract implementation of a model."""
 
-    def __init__(self, task, *args, **kwargs):
+    def __init__(self, task, data_type, *args, **kwargs):
         """
         Initalize a Model.
         
@@ -14,6 +15,7 @@ class Model(object):
             kwargs (dict): list of key-value arguments. Unused.
         """
         self.task = task
+        self.data_type = data_type
 
     def callback(self, sample, **kwargs):
         """
