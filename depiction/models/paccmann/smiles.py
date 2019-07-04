@@ -2,11 +2,15 @@
 import os
 import re
 import logging
+import numpy as np
 import matplotlib as mpl
 import matplotlib.cm as cm
 from operator import itemgetter
 from rdkit import Chem
 from rdkit.Chem.Draw import rdMolDraw2D
+from spacy.vocab import Vocab
+from spacy.language import Language
+from spacy.tokens import Doc
 
 logger = logging.getLogger(__name__)
 
@@ -194,3 +198,33 @@ def smiles_attention_to_svg(
     drawer.FinishDrawing()
     # return the drawn molecule
     return drawer.GetDrawingText().replace('\n', ' ')
+
+
+def get_smiles_language():
+    """
+    Get SMILES language.
+    
+    Returns:
+        a spacy.language.Language representing SMILES.
+    """
+    valid_values = list(filter(lambda k: k != PADDING_ATOM, ATOM_MAPPING.keys()))
+    vocabulary = Vocab(strings=valid_values)
+    def make_doc(smiles):
+        """
+        Make a SMILES document.
+
+        Arguments:
+            smiles (str): a SMILES representing a molecule.
+        Returns:
+            a spacy.tokens.Doc representing the molecule.
+        """
+        if len(smiles) == 0:
+            tokens = np.random.choice(valid_values)
+        else:
+            tokens = [
+                token
+                for token in ATOM_REGEX.split()
+                if token
+            ]
+        return Doc(vocabulary, words=tokens, spaces=[False]*len(tokens))
+    return Language(vocabulary, make_doc)
