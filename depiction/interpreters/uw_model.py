@@ -12,7 +12,7 @@ from .core import Interpreter
 from ..core import DataType
 from lime.lime_tabular import LimeTabularExplainer
 from lime.lime_text import LimeTextExplainer
-from anchor.anchor_tabular import AnchorTabular
+from anchor.anchor_tabular import AnchorTabularExplainer
 from anchor.anchor_text import AnchorText
 
 
@@ -22,7 +22,7 @@ AVAILABLE_MODELS = {
         DataType.TEXT: LimeTextExplainer
     },
     "anchor": {
-        DataType.TABULAR: AnchorTabular,
+        DataType.TABULAR: AnchorTabularExplainer,
         DataType.TEXT: AnchorText
     }
 }
@@ -32,7 +32,7 @@ class UWModel(Interpreter):
     """
     Concrete interface class
     """
-    def __init__(self, interpreter, data_type, task, explanation_configs, **kwargs):
+    def __init__(self, interpreter, task, data_type, explanation_configs, **kwargs):
         """
         Constructor.
 
@@ -43,13 +43,17 @@ class UWModel(Interpreter):
                       Please, refer to the official implementations of LIME and anchors to
                       understand this parameters.
         """
-        super(UWModel).__init__(self, task)
+        super(UWModel, self).__init__(task, data_type)
 
-        self._explanation_configs = explanation_configs
+        self.explanation_configs = explanation_configs
 
         Model = AVAILABLE_MODELS[interpreter][data_type]
-        self._explainer = Model(**kwargs)
+        self.explainer = Model(**kwargs)
 
-    def interpret(self, callback, sample):
-        explanation = self._explainer.explain_instance(sample, callback, **kwargs)
-        explanation.show_in_notebook()
+
+    def interpret(self, callback, sample, path=None):
+        explanation = self.explainer.explain_instance(sample, callback, **self.explanation_configs)
+        if path is None:
+            explanation.show_in_notebook()
+        else:
+            explanation.save_to_file(path)
