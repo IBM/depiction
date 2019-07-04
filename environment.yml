@@ -3,6 +3,8 @@ channels:
   - https://conda.anaconda.org/rdkit
 dependencies:
   - rdkit=2018.09.1
+  - python>=3.6
+  - pip
   - pip:
     - spacy==2.1.4
     - pandas==0.24.2
