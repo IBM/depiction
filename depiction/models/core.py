@@ -78,10 +78,13 @@ class Model(object):
             yield self.predict(sample, **kwargs)
 
 
-class TextModel(object):
+class TextModel(Model):
     """Abstract implementation of a text model."""
 
-    def __init__(self, task, filename, origin, *args, **kwargs):
+    def __init__(
+        self, task, filename, origin,
+        cache_dir=Path(__file__).parents[1] / 'cache'
+    ):
         """
         Initalize a TextModel.
 
@@ -90,8 +93,8 @@ class TextModel(object):
             filename (str): filename of the model file.
             origin (str): url of the file to download.
         """
-        super(TextModel).__init__(
-            self, task, filename, origin, *args, **kwargs
+        super().__init__(
+            task, filename, origin, cache_dir
         )
 
     def get_language(self):
