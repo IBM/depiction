@@ -15,10 +15,9 @@ RUN conda config --add channels  https://conda.anaconda.org/rdkit
 RUN conda install -y rdkit==2019.03.1
 # install pip dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc and-build-dependencies \
+    && apt-get install -y --no-install-recommends gcc python3-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && pip install --no-cache-dir -r requirements.txt \
-    && apt-get purge -y --auto-remove gcc and-build-dependencies
+    && pip install --no-cache-dir -r requirements.txt
 # install depiction
 RUN pip install --no-cache-dir /build
 # install jupyter
