@@ -4,7 +4,7 @@ from ..core import Task
 
 class Interpreter(object):
     """Abstract implementation of an interpreter."""
-    def __init__(self, task, *args, **kwargs):
+    def __init__(self, task, data_type):
         """
         Initalize a Model.
         
@@ -14,6 +14,7 @@ class Interpreter(object):
             kwargs (dict): list of key-value arguments. Unused.
         """
         self.task = task
+        self.data_type = data_type
 
     def interpret(self, callback, sample):
         """
