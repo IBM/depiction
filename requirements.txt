@@ -4,5 +4,5 @@ scikit-learn == 0.21.2
 tensorflow == 1.14.0
 seaborn == 0.9.0
 lime == 0.1.1.32
-anchor_custom @ git+https://github.com/phineasng/anchor@38625ba2e1851508dce4baf2ad583984697b5811#egg=anchor_custom-0.0.0.5
+anchor_custom @ git+https://github.com/phineasng/anchor@6419bbdfb46b3f1c0d7738e521623856b92bf5af#egg=anchor_custom-0.0.0.5
 paccmann @ git+https://github.com/drugilsberg/paccmann@fae75a1568e58058683031cfa41337c4acb684d1#egg=paccmann-0.1
