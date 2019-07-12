@@ -10,14 +10,15 @@ COPY depiction /build/depiction
 WORKDIR /build
 COPY setup.py /build/
 COPY requirements.txt /build/
+# install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc python3-dev libxrender-dev\
+    && rm -rf /var/lib/apt/lists/*
 # install rdkit
 RUN conda config --add channels  https://conda.anaconda.org/rdkit
 RUN conda install -y rdkit==2019.03.1
 # install pip dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc python3-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 # install depiction
 RUN pip install --no-cache-dir /build
 # install jupyter
