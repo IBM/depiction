@@ -36,10 +36,10 @@ class UWModel(Interpreter):
         """
         Constructor.
 
-        Args:
-            - task: task type
-            - explanation_configs (dict): parameters for the explanation
-            - kwargs: paramater list to pass to the constructor of the explainers.
+        Arguments:
+            task (Task): task type
+            explanation_configs (dict): parameters for the explanation
+            kwargs (dict): paramater list to pass to the constructor of the explainers.
                       Please, refer to the official implementations of LIME and anchors to
                       understand this parameters.
         """
