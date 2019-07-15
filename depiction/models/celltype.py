@@ -54,7 +54,7 @@ class CellTyper(Model):
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
 
-        Returns
+        Returns:
             a prediction for the model on the given sample.
         """
         return self.model.predict(

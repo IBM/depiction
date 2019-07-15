@@ -106,6 +106,7 @@ def _get_index_and_colors(values, objects, predicate, color_mapper):
         objects (Iterable): objects associated to the colors.
         predicate (Callable): a predicate to filter objects.
         color_mapper (cm.ScalarMappable): a mapper from floats to RGBA.
+
     Returns:
         Iterables of indices and RGBA colors.
     """
