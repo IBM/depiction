@@ -226,6 +226,6 @@ def get_smiles_language():
                 token
                 for token in ATOM_REGEX.split()
                 if token
-            ]
+            ][:MAX_LENGTH]
         return Doc(vocabulary, words=tokens, spaces=[False]*len(tokens))
     return Language(vocabulary, make_doc)
