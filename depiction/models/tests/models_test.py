@@ -1,11 +1,11 @@
-import os
+from pathlib import Path
 import shutil
 import tempfile
 import unittest
 
 import pandas as pd
 
-from depiction.models.celltype import CellTyper
+from ..celltype import CellTyper
 
 
 class CellTyperTestCase(unittest.TestCase):
@@ -13,9 +13,7 @@ class CellTyperTestCase(unittest.TestCase):
 
     def setUp(self):
         """Prepare data to predict."""
-        filepath = os.path.abspath(os.path.join(
-            __file__, '..', '..', 'data', 'single-cell', 'data.csv'
-        ))
+        filepath = Path(__file__).resolve().parents[3] / 'data' / 'single-cell' /'data.csv'
         data_df = pd.read_csv(filepath)
         self.data = data_df.drop('category', axis=1).values
         self.tmp_dir = tempfile.mkdtemp()
