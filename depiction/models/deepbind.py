@@ -75,7 +75,7 @@ class DeepBind(TextModel):
     Deepbind wrapper
     """
     def __init__(self, tf_factor_id = "D00328.003", use_labels = True, filename = 'deepbind.tgz', 
-                 origin = "https://ibm.box.com/shared/static/trtnb79or1w4o2sin837czpiz76l3iuk.tgz"):
+                 origin = "https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz"):
         """
         Constructor
 
@@ -88,7 +88,6 @@ class DeepBind(TextModel):
         super().__init__(Task.CLASSIFICATION, filename, origin)
         self.tf_factor_id = tf_factor_id
         self.use_labels = use_labels
-        self.language = create_DNA_language()
         # make sure the model is present
         self.save_dir = os.path.dirname(self.model_path)
         self.model_dir = os.path.join(
