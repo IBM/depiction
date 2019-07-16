@@ -65,13 +65,13 @@ class CachedGraphPaccMannPredictor(object):
         Returns:
             a np.array representing the logits [non-effective, effective].
         """
-        self.next_examples = examples
         number_of_examples = len(examples)
         iterations = number_of_examples // self.batch_size
         remainder = number_of_examples % self.batch_size
         # handle remainder in samples
         if remainder > 0:
-            examples += [examples[-1]]*remainder
+            examples += [examples[-1]]*(self.batch_size - remainder)
+        self.next_examples = examples
         if self.first_run:
             self.predictions = self.estimator.predict(
                 input_fn=self.input_fn(self._create_generator()),

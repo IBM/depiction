@@ -66,7 +66,10 @@ def process_smiles(smiles):
     Returns:
         a list of token indices.append()
     """
-    tokens = [token for token in ATOM_REGEX.split(smiles) if token]
+    tokens = [
+        token for token in ATOM_REGEX.split(
+        smiles) if token
+    ][:MAX_LENGTH]
     return (
         [0]*(MAX_LENGTH - len(tokens)) +
         [ATOM_MAPPING.get(token, 0) for token in tokens]
