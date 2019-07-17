@@ -76,6 +76,25 @@ def process_smiles(smiles):
     )
 
 
+def get_atoms(smiles):
+    """
+    Process a SMILES.
+
+    SMILES string is processed to generate a sequence
+    of atoms.
+
+    Arguments:
+        smiles (str): a SMILES representing a molecule.
+    Returns:
+        a list of atoms.
+    """
+    tokens = process_smiles(smiles)
+    return [
+        REVERSED_ATOM_MAPPING[token]
+        for token in tokens
+    ]
+
+
 def remove_padding_from_atoms_and_smiles_attention(
     atoms, smiles_attention
 ):
