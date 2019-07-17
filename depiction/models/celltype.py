@@ -36,7 +36,7 @@ class CellTyper(Model):
         19: 'Pre-B II',
         20: 'Pre-B I'}
 
-    def __init__(self, filename='celltype_dnn_model.h5',
+    def __init__(self, filename='celltype_model.h5',
                  origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',
                  *args, **kwargs):
         """Initalize the Model."""
@@ -48,7 +48,7 @@ class CellTyper(Model):
     def predict(self, sample, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Arguments:
             sample (object): an input sample for the model.
