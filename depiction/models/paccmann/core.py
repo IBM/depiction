@@ -4,6 +4,7 @@ import json
 import zipfile
 import numpy as np
 import tensorflow as tf
+from copy import deepcopy
 from paccmann.models import paccmann_model_fn, MODEL_SPECIFICATION_FACTORY
 from .smiles import process_smiles, get_smiles_language
 from ..core import TextModel, get_model_file
@@ -65,6 +66,12 @@ class CachedGraphPaccMannPredictor(object):
         Returns:
             a np.array representing the logits [non-effective, effective].
         """
+        # make sure we don't alter the input
+        examples = deepcopy(examples)
+        if isinstance(examples, np.ndarray) and len(examples.shape) > 1:
+            examples = [row for row in examples]
+        if not isinstance(examples, list):
+            examples = [examples]
         number_of_examples = len(examples)
         iterations = number_of_examples // self.batch_size
         remainder = number_of_examples % self.batch_size
