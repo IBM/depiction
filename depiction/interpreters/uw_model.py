@@ -17,11 +17,11 @@ from anchor.anchor_text import AnchorText
 
 
 AVAILABLE_MODELS = {
-    "lime": {
+    'lime': {
         DataType.TABULAR: LimeTabularExplainer,
         DataType.TEXT: LimeTextExplainer
     },
-    "anchor": {
+    'anchor': {
         DataType.TABULAR: AnchorTabularExplainer,
         DataType.TEXT: AnchorText
     }

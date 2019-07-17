@@ -207,7 +207,7 @@ class PaccMann(TextModel):
 
     def __init__(
         self, filename='paccmann.zip',
-        origin='https://ibm.box.com/shared/static/efscxnlchquctsn9alk7tk4a7608278v.zip',
+        origin='https://ibm.box.com/shared/static/dy2x4cen1dsrc738uewmv1iccdawlqwd.zip',
         model_type='mca',
         model_params_json='model_params.json',
         model_checkpoint='model.ckpt-375000',
@@ -318,7 +318,8 @@ class PaccMannSmiles(PaccMann):
         self.cell_line = cell_line
         super().__init__(
             filename, origin, model_type, model_params_json,
-            model_checkpoint, number_of_genes, smiles_length
+            model_checkpoint, number_of_genes, smiles_length,
+            *args, **kwargs
         )
         self.input_fn = lambda generator: paccmann_smiles_input_fn(
             generator, self.cell_line,
@@ -364,7 +365,8 @@ class PaccMannCellLine(PaccMann):
         self.smiles = smiles
         super().__init__(
             filename, origin, model_type, model_params_json,
-            model_checkpoint, number_of_genes, smiles_length
+            model_checkpoint, number_of_genes, smiles_length,
+            *args, **kwargs
         )
         self.input_fn = lambda generator: paccmann_cell_line_input_fn(
             generator, self.smiles,
