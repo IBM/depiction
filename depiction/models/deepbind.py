@@ -16,7 +16,7 @@ from ..core import Task
 from spacy.language import Language
 
 DEEPBIND_CLASSES = ['NotBinding', 'Binding']
-SEQ_FILE_EXTENSION = ".seq"
+SEQ_FILE_EXTENSION = '.seq'
 DNA_ALPHABET = ['T', 'C', 'G', 'A', 'U', 'N']
 
 
@@ -46,7 +46,7 @@ def deepbind(factor_id, sequence_fpath, exec_path):
     return process_deepbind_stdout(process.stdout)
 
 
-def deepbind_on_sequences(factor_id, sequences_list, exec_path, tmp_folder = None):
+def deepbind_on_sequences(factor_id, sequences_list, exec_path, tmp_folder=None):
     tmp_file = tempfile.mkstemp(dir=tmp_folder, suffix = SEQ_FILE_EXTENSION)[1]
 
     with open(tmp_file, 'w') as tmp_fh:
@@ -74,8 +74,11 @@ class DeepBind(TextModel):
     """
     Deepbind wrapper
     """
-    def __init__(self, tf_factor_id = "D00328.003", use_labels = True, filename = 'deepbind.tgz', 
-                 origin = "https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz"):
+    def __init__(
+        self, tf_factor_id='D00328.003', use_labels=True, filename='deepbind.tgz',
+        origin='https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz',
+        *args, **kwargs
+    ):
         """
         Constructor
 
@@ -85,19 +88,21 @@ class DeepBind(TextModel):
             filename (str): where to store the downloaded zip containing the model
             origin (str): link where to download the model from
         """
-        super().__init__(Task.CLASSIFICATION, filename, origin)
+        super().__init__(
+            Task.CLASSIFICATION, filename, origin, *args, **kwargs
+        )
         self.tf_factor_id = tf_factor_id
         self.use_labels = use_labels
         # make sure the model is present
         self.save_dir = os.path.dirname(self.model_path)
         self.model_dir = os.path.join(
             self.save_dir,
-            "deepbind"
+            'deepbind'
         )
         if not os.path.exists(self.model_dir):
             with tarfile.open(self.model_path, 'r:gz') as model_tar:
                 model_tar.extractall(self.save_dir)
-        self.exec_path = os.path.join(self.model_dir, "deepbind")
+        self.exec_path = os.path.join(self.model_dir, 'deepbind')
 
     def predict(self, sample, **kwargs):
         if not isinstance(sample, list):

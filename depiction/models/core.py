@@ -27,8 +27,8 @@ class Model(object):
             filename (str): filename of the model file.
             origin (str): url of the file to download.
             cache_dir (str or Path): directory to save the file, default
-                is 'cache' under module root. Without write access files are
-                stored under '/tmp/.keras'
+                is '~/.keras'. Without write access files are
+                stored under '/tmp/.keras'.
         """
 
         self.task = task
@@ -83,7 +83,7 @@ class TextModel(Model):
 
     def __init__(
         self, task, filename, origin,
-        cache_dir=Path(__file__).parents[1] / 'cache'
+        cache_dir=None
     ):
         """
         Initalize a TextModel.
@@ -92,6 +92,9 @@ class TextModel(Model):
             task (Task): task type.
             filename (str): filename of the model file.
             origin (str): url of the file to download.
+            cache_dir (str or Path): directory to save the file, default
+                is '~/.keras'. Without write access files are
+                stored under '/tmp/.keras'.
         """
         super().__init__(
             task, filename, origin, cache_dir

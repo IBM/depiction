@@ -1,0 +1,26 @@
+#! /usr/bin/env python3
+"""Download models wrapped in depiction."""
+import argparse
+from depiction.models.celltype import CellTyper
+from depiction.models.deepbind import DeepBind
+from depiction.models.paccmann import PaccMann
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '-c', '--cache_dir', type=str,
+    help=(
+        'cache directory where to stored the models. '
+        'Defaults to None. It behaves as tensorflow.keras.utils.get_file.'
+    ),
+    default=None
+)
+
+if __name__ == '__main__':
+    # parse arguments
+    args = parser.parse_args()
+    # CellTyper
+    _ = CellTyper(cache_dir=args.cache_dir)
+    # DeepBind
+    _ = DeepBind(cache_dir=args.cache_dir)
+    # PaccMann
+    _ = PaccMann(cache_dir=args.cache_dir)

@@ -8,6 +8,7 @@ ENV LANG C
 WORKDIR /build/depiction
 COPY depiction /build/depiction
 WORKDIR /build
+COPY bin /build/bin
 COPY setup.py /build/
 COPY requirements.txt /build/
 # install system dependencies
@@ -23,6 +24,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir /build
 # install jupyter
 RUN pip install --no-cache-dir jupyter==1.0.0
+# download all the models
+RUN echo '%run /opt/conda/bin/depiction-models-download' | jupyter console -y
 # setup the workspace
 WORKDIR /workspace
 COPY data /workspace/data

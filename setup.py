@@ -37,5 +37,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     packages=find_packages(),
-    scripts=[]
+    scripts=['bin/depiction-models-download']
 )
