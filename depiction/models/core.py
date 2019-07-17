@@ -18,7 +18,7 @@ class Model(object):
     """Abstract implementation of a model."""
 
     def __init__(self, task, filename, origin,
-                 cache_dir=Path(__file__).parents[1] / 'cache'):
+                 cache_dir=None):
         """
         Initalize a Model.
 
