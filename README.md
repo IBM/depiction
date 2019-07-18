@@ -17,7 +17,7 @@ We built a [docker image](https://cloud.docker.com/repository/docker/drugilsberg
 Once the docker installation is complete the `depiction` image can be pulled right away:
 
 ```sh
-docker pull drugilbserg/depiction
+docker pull drugilsberg/depiction
 ```
 
 **NOTE**: the image is quite large (~5.5GB) and this step might require sometime.
