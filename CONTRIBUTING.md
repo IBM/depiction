@@ -90,7 +90,12 @@ ipython kernel install --user --name=depiction-development
 
 ## Testing
 
-**TODO**
+For tests we use the `unittest` module.
+You can run tess by typing:
+
+```sh
+python -m unittest discover -p "*test.py"
+```
 
 ## Coding style guidelines
 
