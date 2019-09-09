@@ -40,6 +40,12 @@ We recommend to run it as a daemon:
 docker run -d -p 8899:8888 -it drugilsberg/depiction
 ```
 
+maybe mount your local notebooks directory to keep the changes locally
+
+```
+docker run --mount src=`pwd`/notebooks,target=/workspace/notebooks,type=bind -p 8899:8888 -it drugilsberg/depiction
+```
+
 and stopped using the container id:
 
 ```sh
