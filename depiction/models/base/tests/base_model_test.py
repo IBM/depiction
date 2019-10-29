@@ -15,7 +15,7 @@ class ConcreteTestModel(BaseModel):
 
 
 class BaseModelTestCase(unittest.TestCase):
-    """Base model interface."""
+    
     def testModelConstruction(self):
         # expected inputs
         for task_type in Task:

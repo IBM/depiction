@@ -64,4 +64,3 @@ class BaseModel(ABC):
         """
         for sample in samples:
             yield self.predict(sample, **kwargs)
-
