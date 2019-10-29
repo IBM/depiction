@@ -17,12 +17,12 @@ class BaseModel(ABC):
             data_type (depiction.core.DataType): data type.
         """
         if not isinstance(task, Task) or not isinstance(data_type, DataType):
-            raise TypeError
+            raise TypeError("Inputs must be valid Task and DataType types!")
 
         self.task = task
         self.data_type = data_type
 
-    def callback(self, **kwargs):
+    def callback(self, *argv, **kwargs):
         """
         Return a callback function that can be called directly on the samples.
         The additional arguments are wrapped and embedded in the function call.
@@ -33,10 +33,10 @@ class BaseModel(ABC):
         Returns:
             a function taking a sample an input and returning the prediction.
         """
-        return lambda sample: self.predict(sample, **kwargs)
+        return lambda sample: self.predict(sample, *argv, **kwargs)
 
     @abstractmethod
-    def predict(self, sample, **kwargs):
+    def predict(self, sample, *argv, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
         arameters.
@@ -50,7 +50,7 @@ class BaseModel(ABC):
         """
         raise NotImplementedError
 
-    def predict_many(self, samples, **kwargs):
+    def predict_many(self, samples, *argv, **kwargs):
         """
         Run the model for inference on the given samples and with the provided
         parameters.
@@ -63,4 +63,11 @@ class BaseModel(ABC):
             a generator of predictions.
         """
         for sample in samples:
-            yield self.predict(sample, **kwargs)
+            yield self.predict(sample, *argv, **kwargs)
+
+
+class TrainableModel(BaseModel):
+    """Interface for trainable models."""
+    @abstractmethod
+    def fit(self, *argv, **kwargs):
+        raise NotImplementedError
