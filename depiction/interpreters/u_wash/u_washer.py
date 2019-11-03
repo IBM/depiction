@@ -54,7 +54,7 @@ class UWasher(BaseInterpreter):
         Interpreter_model = self.AVAILABLE_INTERPRETERS[interpreter][model.data_type]
         self.explainer = Interpreter_model(**kwargs)
 
-    def interpret(self, sample, callback_args = {}, explanation_configs = {}, path=None):
+    def interpret(self, sample, callback_args = {}, explanation_configs = {}, path=None, callback=None):
         """
         Interpret a sample.
 
@@ -63,8 +63,10 @@ class UWasher(BaseInterpreter):
             callback_args (dict): arguments to pass to the model to get a callback function
             explanation_configs (dict): further configurations for the explainer
             path (str): path where to save interpretation results. If not provided, show in notebook
+            callback: function. if not provided, the callback function is taken directly from the model.
         """
-        callback = self.model.callback(**callback_args)
+        if callback is None:
+            callback = self.model.callback(**callback_args)
         explanation = self.explainer.explain_instance(sample, callback, **explanation_configs)
         if path is None:
             explanation.show_in_notebook()

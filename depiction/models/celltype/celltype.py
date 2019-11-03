@@ -1,6 +1,8 @@
-from .core import Model
-from ..core import Task
+from ..base.base_model import BaseModel
+from ..base.utils import get_model_file
+from ...core import Task, DataType
 from tensorflow import keras
+import tempfile
 from tensorflow.keras.utils import to_categorical
 
 
@@ -12,7 +14,7 @@ def one_hot_decoding(labels):
     return labels.argmax(axis=1) + 1
 
 
-class CellTyper(Model):
+class CellTyper(BaseModel):
     """Classifier of single cells."""
     celltype_names = {
         1: 'CD11b- Monocyte',
@@ -38,11 +40,12 @@ class CellTyper(Model):
 
     def __init__(self, filename='celltype_model.h5',
                  origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',
-                 *args, **kwargs):
+                 cache_dir=tempfile.mkdtemp()):
         """Initalize the Model."""
-        super().__init__(
-            Task.CLASSIFICATION, filename, origin, *args, **kwargs
+        super(CellTyper, self).__init__(
+            Task.CLASSIFICATION, DataType.TABULAR
         )
+        self.model_path = get_model_file(filename, origin, cache_dir)
         self.model = keras.models.load_model(self.model_path)
 
     def predict(self, sample, **kwargs):
