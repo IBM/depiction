@@ -2,13 +2,15 @@
 import os
 import json
 import zipfile
+import tempfile
 import numpy as np
 import tensorflow as tf
 from copy import deepcopy
 from paccmann.models import paccmann_model_fn, MODEL_SPECIFICATION_FACTORY
 from .smiles import process_smiles, get_smiles_language
-from ..core import TextModel, get_model_file
-from ...core import Task
+from ..base.base_model import BaseModel 
+from ..base.utils import get_model_file
+from ...core import Task, DataType
 
 MODEL_PARAMS_JSON = 'model_params.json'
 MODEL_CHECKPOINT = 'model.ckpt-375000'
@@ -202,18 +204,19 @@ def paccmann_cell_line_input_fn(
     )
 
 
-class PaccMann(TextModel):
+class PaccMann(BaseModel):
     """Multimodal classification of drug sensitivity."""
 
     def __init__(
-        self, filename='paccmann.zip',
+        self, 
+        data_type, filename='paccmann.zip',
         origin='https://ibm.box.com/shared/static/dy2x4cen1dsrc738uewmv1iccdawlqwd.zip',
         model_type='mca',
         model_params_json='model_params.json',
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        *args, **kwargs
+        cache_dir=tempfile.mkdtemp()
     ):
         """
         Initalize the Model.
@@ -231,8 +234,9 @@ class PaccMann(TextModel):
             kwargs (dict): list of key-value arguments.
         """
         super().__init__(
-            Task.CLASSIFICATION, filename, origin, *args, **kwargs
+            Task.CLASSIFICATION, data_type
         )
+        self.model_path = get_model_file(filename, origin, cache_dir)
         # store initalization parameters
         self.model_type = model_type
         self.model_params_json = model_params_json
@@ -289,7 +293,7 @@ class PaccMannSmiles(PaccMann):
     """Multimodal classification of drug sensitivity for a given cell line."""
 
     def __init__(
-        self, cell_line,
+        self, cell_line, 
         filename='paccmann.zip',
         origin='https://ibm.box.com/shared/static/dy2x4cen1dsrc738uewmv1iccdawlqwd.zip',
         model_type='mca',
@@ -297,7 +301,7 @@ class PaccMannSmiles(PaccMann):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        *args, **kwargs
+        cache_dir=tempfile.mkdtemp()
     ):
         """
         Initalize the Model.
@@ -316,10 +320,10 @@ class PaccMannSmiles(PaccMann):
             kwargs (dict): list of key-value arguments.
         """
         self.cell_line = cell_line
-        super().__init__(
+        super().__init__(DataType.TEXT,
             filename, origin, model_type, model_params_json,
             model_checkpoint, number_of_genes, smiles_length,
-            *args, **kwargs
+            cache_dir
         )
         self.input_fn = lambda generator: paccmann_smiles_input_fn(
             generator, self.cell_line,
@@ -344,7 +348,7 @@ class PaccMannCellLine(PaccMann):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        *args, **kwargs
+        cache_dir=tempfile.mkdtemp()
     ):
         """
         Initalize the Model.
@@ -363,10 +367,10 @@ class PaccMannCellLine(PaccMann):
             kwargs (dict): list of key-value arguments.
         """
         self.smiles = smiles
-        super().__init__(
+        super().__init__(DataType.TABULAR,
             filename, origin, model_type, model_params_json,
             model_checkpoint, number_of_genes, smiles_length,
-            *args, **kwargs
+            cache_dir
         )
         self.input_fn = lambda generator: paccmann_cell_line_input_fn(
             generator, self.smiles,
