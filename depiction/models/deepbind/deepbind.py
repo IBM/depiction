@@ -8,11 +8,12 @@ import tarfile
 import tempfile
 import subprocess
 import numpy as np
-from .core import TextModel
+from ..base.base_model import BaseModel
+from ..base.utils import get_model_file
 from subprocess import PIPE
 from spacy.tokens import Doc
 from spacy.vocab import Vocab
-from ..core import Task
+from ...core import Task, DataType
 from spacy.language import Language
 
 DEEPBIND_CLASSES = ['NotBinding', 'Binding']
@@ -70,14 +71,14 @@ def create_DNA_language():
     return Language(vocab, make_doc)
 
 
-class DeepBind(TextModel):
+class DeepBind(BaseModel):
     """
     Deepbind wrapper
     """
     def __init__(
         self, tf_factor_id='D00328.003', use_labels=True, filename='deepbind.tgz',
         origin='https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz',
-        *args, **kwargs
+        cache_dir=tempfile.mkdtemp()
     ):
         """
         Constructor
@@ -89,8 +90,9 @@ class DeepBind(TextModel):
             origin (str): link where to download the model from
         """
         super().__init__(
-            Task.CLASSIFICATION, filename, origin, *args, **kwargs
+            Task.CLASSIFICATION, DataType.TEXT
         )
+        self.model_path = get_model_file(filename, origin, cache_dir)
         self.tf_factor_id = tf_factor_id
         self.use_labels = use_labels
         # make sure the model is present
