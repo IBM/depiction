@@ -3,11 +3,19 @@ from unittest import mock
 from random import choice
 
 from ....core import Task, DataType
-from ..base_interpreter import AnteHocInterpreter
+from ..base_interpreter import BaseInterpreter, AnteHocInterpreter
 from ....models.base.base_model import BaseModel
 
 
+class ConcreteBaseInterpreter(BaseInterpreter):
+    def interpret(self):
+        return
+
+
 class ConcreteAnteHocInterpreter(AnteHocInterpreter):
+    SUPPORTED_TASK = set(Task)
+    SUPPORTED_DATATYPE = set(DataType)
+
     def predict(self, sample):
         return sample
 
@@ -24,6 +32,16 @@ class ConcreteAnteHocInterpreter(AnteHocInterpreter):
 class DummyModel(BaseModel):
     def predict(self, sample):
         return sample
+
+
+class BaseInterpreterTestCase(unittest.TestCase):
+
+    def testConstructor(self):
+        with self.assertRaises(TypeError):
+            interpreter = ConcreteBaseInterpreter(0)
+
+        with self.assertRaises(ValueError):
+            interpreter = ConcreteBaseInterpreter(DummyModel(choice(list(Task)), choice(list(DataType))))
 
 
 class AnteHocInterpreterTestCase(unittest.TestCase):
@@ -43,10 +61,25 @@ class AnteHocInterpreterTestCase(unittest.TestCase):
 
 
         # - posthoc mode
+        # -- calling base interpreter constructor
+        def dummy_init(self, model):
+            return None
+
+        with mock.patch('depiction.interpreters.base.base_interpreter.BaseModel.__init__',
+            side_effect = dummy_init) as mock_par_constructor:
+            try:
+                interpreter = ConcreteAnteHocInterpreter(AnteHocInterpreter.UsageMode.POST_HOC,
+                                                        model = DummyModel(choice(list(Task)), choice(list(DataType)))
+                                                        )
+            except:
+                pass
+            
+            mock_par_constructor.assert_called_once()
+
+        # -- expected inputs
         for task_type in Task:
             for data_type in DataType:
                 model = DummyModel(task_type, data_type)
-                # -- expected inputs
                 interpreter = ConcreteAnteHocInterpreter(AnteHocInterpreter.UsageMode.POST_HOC,
                                                          model = model)
                 self.assertTrue(hasattr(interpreter, '_to_interpret'))

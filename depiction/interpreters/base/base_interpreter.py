@@ -19,6 +19,20 @@ class ExplanationType(Enum):
 
 
 class BaseInterpreter(ABC):
+    SUPPORTED_TASK = {}
+    SUPPORTED_DATATYPE = {}
+
+    def __init__(self, model):
+        """Constructor checking validity of the model."""
+        if not isinstance(model, BaseModel):
+            raise TypeError("For safe use of this library, please wrap this model into a BaseModel!")
+
+        if model.task not in self.SUPPORTED_TASK:
+            raise ValueError("Interpreter does not support the task of the provided model!")
+
+        if model.data_type not in self.SUPPORTED_DATATYPE:
+            raise ValueError("Interpreter does not support the task of the provided model!")
+
     @abstractmethod
     def interpret(self, *argv, **kwarg):
         """
@@ -35,8 +49,6 @@ class AnteHocInterpreter(BaseInterpreter, TrainableModel):
 
     def __init__(self, usage_mode, model = None, task_type = None, data_type = None):
         """Constructor. Checks consistency among arguments."""
-        BaseInterpreter.__init__(self)
-
         self.usage_mode = usage_mode
         if self.usage_mode == self.UsageMode.ANTE_HOC:
             if task_type is None or data_type is None:
@@ -46,8 +58,7 @@ class AnteHocInterpreter(BaseInterpreter, TrainableModel):
             if model is None:
                 raise ValueError("Please provide a model to post-hoc interpret!")
             else:
-                if not isinstance(model, BaseModel):
-                    raise TypeError("For safe use of this library, please wrap this model into a BaseModel!")
+                BaseInterpreter.__init__(self, model)
 
             self._to_interpret = model
             TrainableModel.__init__(self, model.task, model.data_type)
