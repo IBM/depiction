@@ -13,7 +13,7 @@ from lime.lime_text import LimeTextExplainer
 from lime.lime_tabular import LimeTabularExplainer
 from anchor.anchor_tabular import AnchorTabularExplainer
 
-from ..core import Interpreter
+from ..base.base_interpreter import BaseInterpreter
 from ...core import Task, DataType
 
 
@@ -34,7 +34,7 @@ class UWasher(BaseInterpreter):
     }
 
     SUPPORTED_TASK = {Task.CLASSIFICATION}
-    SUPPORTED_DATATYPE = {i.keys() for i in UWasher.AVAILABLE_INTERPRETERS.values()}
+    SUPPORTED_DATATYPE = {k for i in AVAILABLE_INTERPRETERS.values() for k in i.keys()}
 
     def __init__(self, interpreter, model, **kwargs):
         """
@@ -51,7 +51,7 @@ class UWasher(BaseInterpreter):
         super(UWasher, self).__init__(model)
 
         self.model = model
-        Interpreter_model = AVAILABLE_MODELS[interpreter][data_type]
+        Interpreter_model = self.AVAILABLE_INTERPRETERS[interpreter][model.data_type]
         self.explainer = Interpreter_model(**kwargs)
 
     def interpret(self, sample, callback_args = {}, explanation_configs = {}, path=None):
@@ -65,8 +65,9 @@ class UWasher(BaseInterpreter):
             path (str): path where to save interpretation results. If not provided, show in notebook
         """
         callback = self.model.callback(**callback_args)
-        explanation = self.explainer.explain_instance(sample, callback, **self.explanation_configs)
+        explanation = self.explainer.explain_instance(sample, callback, **explanation_configs)
         if path is None:
             explanation.show_in_notebook()
         else:
             explanation.save_to_file(path)
+        return explanation
