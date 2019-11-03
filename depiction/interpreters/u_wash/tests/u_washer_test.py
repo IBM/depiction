@@ -5,9 +5,9 @@ from random import choice
 import spacy
 
 
-from ...core import Task, DataType
-from ...models.base.base_model import BaseModel
-from .u_washer import UWasher
+from ....core import Task, DataType
+from ....models.base.base_model import BaseModel
+from ..u_washer import UWasher
 
 
 class DummyModel(BaseModel):
