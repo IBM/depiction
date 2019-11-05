@@ -15,7 +15,7 @@ class CellTyperTestCase(unittest.TestCase):
         """Prepare data to predict."""
         filepath = Path(
             __file__
-        ).resolve().parents[3] / 'data' / 'single-cell' / 'data.csv'
+        ).resolve().parents[4] / 'data' / 'single-cell' / 'data.csv'
         data_df = pd.read_csv(filepath)
         self.data = data_df.drop('category', axis=1).values
         self.tmp_dir = tempfile.mkdtemp()
