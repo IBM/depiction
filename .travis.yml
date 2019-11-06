@@ -3,8 +3,7 @@ services:
 
 script:
   - docker-compose -f docker/docker-compose.yml build
-  - docker run -it depiction python3 -m unittest discover -t . -p "*_test.py" depiction
-  - docker run -it depiction
+  - docker run -it drugilsberg/depiction python3 -m unittest discover -t . -p "*_test.py" depiction
 
 deploy:
   provider: script
