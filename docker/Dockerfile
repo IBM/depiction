@@ -26,6 +26,9 @@ RUN pip install --no-cache-dir /build
 RUN pip install --no-cache-dir jupyter==1.0.0
 # download all the models
 RUN echo '%run /opt/conda/bin/depiction-models-download' | jupyter console -y
+# setup data for tests
+WORKDIR /build/data
+COPY data /build/data
 # setup the workspace
 WORKDIR /workspace
 COPY data /workspace/data
