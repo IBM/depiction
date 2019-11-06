@@ -53,7 +53,7 @@ class CellTyper(BaseModel):
         Run the model for inference on a given sample and with the provided
         parameters.
 
-        Arguments:
+        Args:
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
 

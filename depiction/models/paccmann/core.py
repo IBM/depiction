@@ -33,7 +33,7 @@ class CachedGraphPaccMannPredictor(object):
         """
         Initialize CachedGraphPaccMannPredictor.
 
-        Arguments:
+        Args:
             estimator (tf.estimator.Estimator): a PaccMann estimator.
             input_fn (Callable): an input function accepting a generator.
             batch_size (int): size of the batch supported by the estimator.
@@ -62,7 +62,7 @@ class CachedGraphPaccMannPredictor(object):
         """
         Predict on the given examples.
 
-        Arguments:
+        Args:
             examples (Iterable): an iterable of examples.
 
         Returns:
@@ -123,7 +123,7 @@ def generator_fn_to_dataset(
     """
     Get a tf.data.Dataset from a generator function.
 
-    Arguments:
+    Args:
         generator_fn (Callable): a generator function.
         number_of_genes (int): number of the gene considered.
         smiles_length (int): maximum SMILES length.
@@ -152,7 +152,7 @@ def paccmann_smiles_input_fn(
     """ 
     Input for SMILES data.
     
-    Arguments:
+    Args:
         generator (generator): a generator providing SMILES.
         cell_line (np.array): an array containing cell line gene expression.
         number_of_genes (int): number of the gene considered.
@@ -182,7 +182,7 @@ def paccmann_cell_line_input_fn(
     """ 
     Input for cell line data.
     
-    Arguments:
+    Args:
         generator (generator): a generator providing cell line data.
         smiles (str): a SMILES representing a molecule.
         number_of_genes (int): number of the gene considered.
@@ -221,7 +221,7 @@ class PaccMann(BaseModel):
         """
         Initalize the Model.
         
-        Arguments:
+        Args:
             filename (str): model zip.
             origin (str): url where the model is stored.
             model_type (str): multimodal encoder type.
@@ -280,7 +280,7 @@ class PaccMann(BaseModel):
         Run the model for inference on a given sample and with the provided
         parameters.
 
-        Arguments:
+        Args:
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
 
@@ -306,7 +306,7 @@ class PaccMannSmiles(PaccMann):
         """
         Initalize the Model.
         
-        Arguments:
+        Args:
             cell_line (np.array): an array containing cell line gene expression.
             filename (str): model zip.
             origin (str): url where the model is stored.
@@ -353,7 +353,7 @@ class PaccMannCellLine(PaccMann):
         """
         Initalize the Model.
         
-        Arguments:
+        Args:
             smiles (str): a SMILES representing a molecule.
             filename (str): model zip.
             origin (str): url where the model is stored.

@@ -61,7 +61,7 @@ def process_smiles(smiles):
     SMILES string is processed to generate a zero-padded
     sequence.
 
-    Arguments:
+    Args:
         smiles (str): a SMILES representing a molecule.
     Returns:
         a list of token indices.append()
@@ -83,7 +83,7 @@ def get_atoms(smiles):
     SMILES string is processed to generate a sequence
     of atoms.
 
-    Arguments:
+    Args:
         smiles (str): a SMILES representing a molecule.
     Returns:
         a list of atoms.
@@ -101,7 +101,7 @@ def remove_padding_from_atoms_and_smiles_attention(
     """
     Remove padding atoms and corresponding attention weights.
     
-    Arguments:
+    Args:
         atoms (Iterable): an iterable of atoms.
         smiles_attention (Iterable): an iterable of floating point values.
     Returns:
@@ -123,7 +123,7 @@ def _get_index_and_colors(values, objects, predicate, color_mapper):
 
     The predicate acts on a tuple of (value, object).
 
-    Arguments:
+    Args:
         values (Iterable): floats representing a color.
         objects (Iterable): objects associated to the colors.
         predicate (Callable): a predicate to filter objects.
@@ -155,7 +155,7 @@ def smiles_attention_to_svg(
     """
     Generate an svg of the molecule highlighiting SMILES attention.
 
-    Arguments:
+    Args:
         smiles_attention (Iterable): an iterable of floating point values.
         atoms (Iterable): an iterable of atoms.
         molecule (rdkit.Chem.Mol): a molecule.
@@ -236,7 +236,7 @@ def get_smiles_language():
         """
         Make a SMILES document.
 
-        Arguments:
+        Args:
             smiles (str): a SMILES representing a molecule.
         Returns:
             a spacy.tokens.Doc representing the molecule.

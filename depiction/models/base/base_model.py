@@ -12,7 +12,7 @@ class BaseModel(ABC):
         """
         Initalize a Model.
 
-        Arguments:
+        Args:
             task (depiction.core.Task): task type.
             data_type (depiction.core.DataType): data type.
         """
@@ -27,7 +27,7 @@ class BaseModel(ABC):
         Return a callback function that can be called directly on the samples.
         The additional arguments are wrapped and embedded in the function call.
 
-        Arguments:
+        Args:
             kwargs (dict): list of key-value arguments.
 
         Returns:
@@ -41,7 +41,7 @@ class BaseModel(ABC):
         Run the model for inference on a given sample and with the provided
         arameters.
 
-        Arguments:
+        Args:
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
 
@@ -55,7 +55,7 @@ class BaseModel(ABC):
         Run the model for inference on the given samples and with the provided
         parameters.
 
-        Arguments:
+        Args:
             samples (Iterable): input samples for the model.
             kwargs (dict): list of key-value arguments.
 

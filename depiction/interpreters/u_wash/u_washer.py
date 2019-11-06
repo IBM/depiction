@@ -40,7 +40,7 @@ class UWasher(BaseInterpreter):
         """
         Constructor.
 
-        Arguments:
+        Args:
             interpreter (str): string denoting the actual model to use. Possible values: 'lime', 'anchors'.
             model (base model): task type
             explanation_configs (dict): parameters for the explanation
