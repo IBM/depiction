@@ -7,7 +7,7 @@ References:
 - "Anchors: High-Precision Model-Agnostic Explanations" (https://homes.cs.washington.edu/~marcotcr/aaai18.pdf)
 - ""Why Should I Trust You?": Explaining the Predictions of Any Classifier" (https://arxiv.org/pdf/1602.04938.pdf)
 
-""" 
+"""
 from anchor.anchor_text import AnchorText
 from lime.lime_text import LimeTextExplainer
 from lime.lime_tabular import LimeTabularExplainer
@@ -23,18 +23,23 @@ class UWasher(BaseInterpreter):
     by researchers from the University of Washington.
     """
     AVAILABLE_INTERPRETERS = {
-        'lime': {
-            DataType.TABULAR: LimeTabularExplainer,
-            DataType.TEXT: LimeTextExplainer
-        },
-        'anchors': {
-            DataType.TABULAR: AnchorTabularExplainer,
-            DataType.TEXT: AnchorText
-        }
+        'lime':
+            {
+                DataType.TABULAR: LimeTabularExplainer,
+                DataType.TEXT: LimeTextExplainer
+            },
+        'anchors':
+            {
+                DataType.TABULAR: AnchorTabularExplainer,
+                DataType.TEXT: AnchorText
+            }
     }
 
     SUPPORTED_TASK = {Task.CLASSIFICATION}
-    SUPPORTED_DATATYPE = {k for i in AVAILABLE_INTERPRETERS.values() for k in i.keys()}
+    SUPPORTED_DATATYPE = {
+        k
+        for i in AVAILABLE_INTERPRETERS.values() for k in i.keys()
+    }
 
     def __init__(self, interpreter, model, **kwargs):
         """
@@ -51,10 +56,18 @@ class UWasher(BaseInterpreter):
         super(UWasher, self).__init__(model)
 
         self.model = model
-        Interpreter_model = self.AVAILABLE_INTERPRETERS[interpreter][model.data_type]
+        Interpreter_model = self.AVAILABLE_INTERPRETERS[interpreter][
+            model.data_type]
         self.explainer = Interpreter_model(**kwargs)
 
-    def interpret(self, sample, callback_args = {}, explanation_configs = {}, path=None, callback=None):
+    def interpret(
+        self,
+        sample,
+        callback_args={},
+        explanation_configs={},
+        path=None,
+        callback=None
+    ):
         """
         Interpret a sample.
 
@@ -67,7 +80,9 @@ class UWasher(BaseInterpreter):
         """
         if callback is None:
             callback = self.model.callback(**callback_args)
-        explanation = self.explainer.explain_instance(sample, callback, **explanation_configs)
+        explanation = self.explainer.explain_instance(
+            sample, callback, **explanation_configs
+        )
         if path is None:
             explanation.show_in_notebook()
         else:

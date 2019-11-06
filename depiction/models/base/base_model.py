@@ -68,6 +68,7 @@ class BaseModel(ABC):
 
 class TrainableModel(BaseModel):
     """Interface for trainable models."""
+
     @abstractmethod
     def fit(self, *argv, **kwargs):
         raise NotImplementedError
