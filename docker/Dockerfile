@@ -36,4 +36,4 @@ EXPOSE 8888
 COPY docker/docker-entrypoint.sh /usr/local/bin/
 RUN chmod a+x /usr/local/bin/docker-entrypoint.sh
 # entrypoint to startup the notebook
-ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["docker-entrypoint.sh"]
