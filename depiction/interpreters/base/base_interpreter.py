@@ -40,7 +40,7 @@ class BaseInterpreter(ABC):
             )
 
     @abstractmethod
-    def interpret(self, *argv, **kwarg):
+    def interpret(self, *args, **kwarg):
         """
         Interface to interpret a model.
         """
@@ -74,17 +74,17 @@ class AnteHocInterpreter(BaseInterpreter, TrainableModel):
             self._to_interpret = model
             TrainableModel.__init__(self, model.task, model.data_type)
 
-    def fit(self, *argv, **kwargs):
+    def fit(self, *args, **kwargs):
         """Training routine. Implements the antehoc vs posthoc logic."""
         if self.usage_mode == self.UsageMode.ANTE_HOC:
-            self._fit_antehoc(*argv, **kwargs)
+            self._fit_antehoc(*args, **kwargs)
         else:
-            self._fit_posthoc(*argv, **kwargs)
+            self._fit_posthoc(*args, **kwargs)
 
     @abstractmethod
-    def _fit_antehoc(self, *argv, **kwargs):
+    def _fit_antehoc(self, *args, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
-    def _fit_posthoc(self, *argv, **kwargs):
+    def _fit_posthoc(self, *args, **kwargs):
         raise NotImplementedError

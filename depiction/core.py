@@ -12,3 +12,4 @@ class DataType(Enum):
     """Enum indicating the data type used by a model."""
     TABULAR = 1
     TEXT = 2
+    IMAGE = 3

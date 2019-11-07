@@ -1,5 +1,4 @@
 """Abstract interface for models."""
-from pathlib import Path
 from abc import ABC, abstractmethod
 
 from ...core import Task, DataType
@@ -22,7 +21,7 @@ class BaseModel(ABC):
         self.task = task
         self.data_type = data_type
 
-    def callback(self, *argv, **kwargs):
+    def callback(self, *args, **kwargs):
         """
         Return a callback function that can be called directly on the samples.
         The additional arguments are wrapped and embedded in the function call.
@@ -33,16 +32,17 @@ class BaseModel(ABC):
         Returns:
             a function taking a sample an input and returning the prediction.
         """
-        return lambda sample: self.predict(sample, *argv, **kwargs)
+        return lambda sample: self.predict(sample, *args, **kwargs)
 
     @abstractmethod
-    def predict(self, sample, *argv, **kwargs):
+    def predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
         arameters.
 
         Args:
             sample (object): an input sample for the model.
+            args (list): list of arguments.
             kwargs (dict): list of key-value arguments.
 
         Returns:
@@ -50,25 +50,26 @@ class BaseModel(ABC):
         """
         raise NotImplementedError
 
-    def predict_many(self, samples, *argv, **kwargs):
+    def predict_many(self, samples, *args, **kwargs):
         """
         Run the model for inference on the given samples and with the provided
         parameters.
 
         Args:
             samples (Iterable): input samples for the model.
+            args (list): list of arguments.
             kwargs (dict): list of key-value arguments.
 
         Returns:
             a generator of predictions.
         """
         for sample in samples:
-            yield self.predict(sample, *argv, **kwargs)
+            yield self.predict(sample, *args, **kwargs)
 
 
 class TrainableModel(BaseModel):
     """Interface for trainable models."""
 
     @abstractmethod
-    def fit(self, *argv, **kwargs):
+    def fit(self, *args, **kwargs):
         raise NotImplementedError

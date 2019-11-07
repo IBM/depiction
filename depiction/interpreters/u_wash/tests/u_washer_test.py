@@ -19,7 +19,7 @@ class UWasherTestCase(unittest.TestCase):
 
     def testConstructor(self):
 
-        def dummy_init(*argv, **kwargs):
+        def dummy_init(*args, **kwargs):
             return None
 
         def test_routine(explainer_key, explainer_cls, model):
@@ -59,7 +59,7 @@ class UWasherTestCase(unittest.TestCase):
             def save_to_file(self, path):
                 self.PATH = path
 
-        def dummy_interpret(*argv, **kwargs):
+        def dummy_interpret(*args, **kwargs):
             return DummyExplanation()
 
         interpreter = UWasher(
