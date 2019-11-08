@@ -1,6 +1,5 @@
 import unittest
 
-
 from ..core import Task
 
 

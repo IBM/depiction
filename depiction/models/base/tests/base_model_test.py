@@ -27,7 +27,7 @@ class BaseModelTestCase(unittest.TestCase):
 
         # unexpected inputs
         with self.assertRaises(TypeError):
-            ConcreteTestModel("asad", 5)
+            ConcreteTestModel('asad', 5)
 
     def testCallback(self):
         concrete_model = ConcreteTestModel(
@@ -38,7 +38,7 @@ class BaseModelTestCase(unittest.TestCase):
             test_kwarg = {'test_kwarg': 'test'}
             callback = concrete_model.callback(**test_kwarg)
             test_sample = 10
-            res = callback(test_sample)
+            _ = callback(test_sample)
             mock_predict.assert_called_with(test_sample, **test_kwarg)
 
     def testPredictMany(self):

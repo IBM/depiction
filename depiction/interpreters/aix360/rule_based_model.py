@@ -18,15 +18,18 @@ from ..base.base_interpreter import AnteHocInterpreter, ExplanationType
 
 class RuleAIX360(AnteHocInterpreter):
     _AVAILABLE_RULE_REGRESSORS = {'logistic', 'linear'}
-    
+
     SUPPORTED_TASK = {Task.BINARY}
     SUPPORTED_DATATYPE = {DataType.TABULAR}
 
-    AVAILABLE_INTERPRETERS = {'brcg'}.union({'glrm_{}'.format(i) for i in _AVAILABLE_RULE_REGRESSORS})
+    AVAILABLE_INTERPRETERS = {'brcg'}.union(
+        {'glrm_{}'.format(i)
+         for i in _AVAILABLE_RULE_REGRESSORS}
+    )
 
     EXPLANATION_TYPE = ExplanationType.GLOBAL
 
-    def __init__(self, explainer, model = None, regressor_params={}):
+    def __init__(self, explainer, model=None, regressor_params={}):
         """
         Constructor. For a description of the missing arguments, please refer to
         the AnteHocInterpreter.
@@ -35,12 +38,15 @@ class RuleAIX360(AnteHocInterpreter):
             - explainer (str): name of the explainer to use.
         """
         if model is None:
-            super(RuleAIX360, self).__init__(AnteHocInterpreter.UsageMode.ANTE_HOC, 
-                                             task_type=Task.BINARY,
-                                             data_type=DataType.TABULAR)
+            super(RuleAIX360, self).__init__(
+                AnteHocInterpreter.UsageMode.ANTE_HOC,
+                task_type=Task.BINARY,
+                data_type=DataType.TABULAR
+            )
         else:
-            super(RuleAIX360, self).__init__(AnteHocInterpreter.UsageMode.POST_HOC, 
-                                             model=model)
+            super(RuleAIX360, self).__init__(
+                AnteHocInterpreter.UsageMode.POST_HOC, model=model
+            )
 
         if 'glrm' in explainer:
             regressor = explainer.split('_')[1]
@@ -49,13 +55,19 @@ class RuleAIX360(AnteHocInterpreter):
             elif regressor == 'linear':
                 self.regressor = LinearRuleRegression(**regressor_params)
             else:
-                raise ValueError("Regressor '{}' not supported! Available regressors: {}".format(regressor, self._AVAILABLE_RULE_REGRESSORS))
+                raise ValueError(
+                    "Regressor '{}' not supported! Available regressors: {}".
+                    format(regressor, self._AVAILABLE_RULE_REGRESSORS)
+                )
             self.explainer = GLRMExplainer(self.regressor)
         elif explainer == 'brcg':
             self.regressor = BooleanRuleCG(**regressor_params)
             self.explainer = BRCGExplainer(self.regressor)
         else:
-            raise ValueError("Interpreter '{}' not supported! Available interpreters: {}".format(explainer, self.AVAILABLE_INTERPRETERS))
+            raise ValueError(
+                "Interpreter '{}' not supported! Available interpreters: {}".
+                format(explainer, self.AVAILABLE_INTERPRETERS)
+            )
 
         self._fitted = False
 
@@ -70,7 +82,7 @@ class RuleAIX360(AnteHocInterpreter):
         self.explainer.fit(X, y)
         self._fitted = True
 
-    def _fit_posthoc(self, X, preprocess_X = None, postprocess_y = None):
+    def _fit_posthoc(self, X, preprocess_X=None, postprocess_y=None):
         """
         Fitting the rule based model to posthoc interpret another model.
 
@@ -89,10 +101,10 @@ class RuleAIX360(AnteHocInterpreter):
 
         if postprocess_y is not None:
             processed_y = postprocess_y(processed_y)
-        
+
         self._fit_antehoc(processed_X, processed_y)
 
-    def interpret(self, explanation_configs = {}, path = None):
+    def interpret(self, explanation_configs={}, path=None):
         """
         Produce explanation. 
 
@@ -117,7 +129,9 @@ class RuleAIX360(AnteHocInterpreter):
         Helper function to visualize the explanation.
         """
         if isinstance(self.explainer, GLRMExplainer):
-            with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+            with pd.option_context(
+                'display.max_rows', None, 'display.max_columns', None
+            ):
                 print(explanation)
         elif isinstance(self.explainer, BRCGExplainer):
             # from "https://github.com/IBM/AIX360/blob/master/examples/rbm/breast-cancer-br.ipynb"

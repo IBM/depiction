@@ -30,7 +30,9 @@ class BaseInterpreter(ABC):
             )
 
         if not Task.check_support(model.task, self.SUPPORTED_TASK):
-            raise ValueError("Interpreter does not support the task of the provided model!")
+            raise ValueError(
+                "Interpreter does not support the task of the provided model!"
+            )
 
         if model.data_type not in self.SUPPORTED_DATATYPE:
             raise ValueError(

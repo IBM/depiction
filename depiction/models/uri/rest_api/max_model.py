@@ -1,7 +1,8 @@
 """Abstract interface for MAX models."""
+import os
 import itertools
 import numpy as np
-from ABC import abstractmethod
+from abc import abstractmethod
 from multiprocessing import Pool
 
 from .rest_api_model import RESTAPIModel
@@ -26,12 +27,19 @@ class MAXModel(RESTAPIModel):
             processess (int): process used in predict_many.
                 Defaults to 1.
         """
+        self.base_endpoint = 'model'
         super().__init__(
-            endpoint='predict', uri=uri, task=task, data_type=data_type
+            endpoint=os.path.join(self.base_endpoint, 'predict'),
+            uri=uri,
+            task=task,
+            data_type=data_type
         )
-        self.metadata_endpoint = 'metadata'
-        self.labels_endpoint = 'labels'
+        self.metadata_endpoint = os.path.join(self.base_endpoint, 'metadata')
+        self.labels_endpoint = os.path.join(self.base_endpoint, 'labels')
         self.processes = processes
+        self.metadata = self._request(
+            method='get', endpoint=self.metadata_endpoint
+        )
 
     @abstractmethod
     def _process_prediction(self, prediction):

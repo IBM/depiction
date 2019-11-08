@@ -11,30 +11,47 @@ from ..rule_based_model import RuleAIX360
 
 
 class DummyModel(BaseModel):
+
     def predict(self, sample):
         return sample
 
 
 class RuleAIX360TestCase(unittest.TestCase):
+
     def _build_posthoc_interpreter(self):
-        model = DummyModel(choice(list(RuleAIX360.SUPPORTED_TASK)), 
-                           choice(list(RuleAIX360.SUPPORTED_DATATYPE)))
-        interpreter = RuleAIX360(choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), model=model)
+        model = DummyModel(
+            choice(list(RuleAIX360.SUPPORTED_TASK)),
+            choice(list(RuleAIX360.SUPPORTED_DATATYPE))
+        )
+        interpreter = RuleAIX360(
+            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), model=model
+        )
         return interpreter
 
     def _build_antehoc_interpreter(self):
-        interpreter = RuleAIX360(choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)))
+        interpreter = RuleAIX360(
+            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS))
+        )
         return interpreter
 
     def testConstructor(self):
         # test error for wrong model
-        NOT_SUPPORTED_TASKS = [t for t in set(Task) for T in RuleAIX360.SUPPORTED_TASK  if not (t <= T)]
-        NOT_SUPPORTED_TYPES = list(set(DataType).difference(RuleAIX360.SUPPORTED_DATATYPE))
+        NOT_SUPPORTED_TASKS = [
+            t for t in set(Task) for T in RuleAIX360.SUPPORTED_TASK
+            if not (t <= T)
+        ]
+        NOT_SUPPORTED_TYPES = list(
+            set(DataType).difference(RuleAIX360.SUPPORTED_DATATYPE)
+        )
 
-        wrong_model = DummyModel(choice(NOT_SUPPORTED_TASKS), choice(NOT_SUPPORTED_TYPES))
+        wrong_model = DummyModel(
+            choice(NOT_SUPPORTED_TASKS), choice(NOT_SUPPORTED_TYPES)
+        )
 
         with self.assertRaises(ValueError):
-            RuleAIX360(choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), wrong_model)
+            RuleAIX360(
+                choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), wrong_model
+            )
 
         # test error for not supported interpreter
         with self.assertRaises(ValueError):
@@ -45,16 +62,22 @@ class RuleAIX360TestCase(unittest.TestCase):
             RuleAIX360('glrm_bubu')
 
         # test correctly chosen glrm and regressor
-        valid_glrm = [i for i in RuleAIX360.AVAILABLE_INTERPRETERS if 'glrm' in i]
+        valid_glrm = [
+            i for i in RuleAIX360.AVAILABLE_INTERPRETERS if 'glrm' in i
+        ]
         interpreter = RuleAIX360(choice(valid_glrm))
         self.assertTrue(isinstance(interpreter.explainer, GLRMExplainer))
-        self.assertTrue(isinstance(interpreter.regressor, LogisticRuleRegression) or
-                        isinstance(interpreter.regressor, LinearRuleRegression))
+        self.assertTrue(
+            isinstance(interpreter.regressor, LogisticRuleRegression)
+            or isinstance(interpreter.regressor, LinearRuleRegression)
+        )
         self.assertFalse(interpreter._fitted)
 
         # -- test correctness of ante-hoc model
         self.assertEqual(interpreter.usage_mode, RuleAIX360.UsageMode.ANTE_HOC)
-        self.assertTrue(Task.check_support(interpreter.task, RuleAIX360.SUPPORTED_TASK))
+        self.assertTrue(
+            Task.check_support(interpreter.task, RuleAIX360.SUPPORTED_TASK)
+        )
         self.assertTrue(interpreter.data_type in RuleAIX360.SUPPORTED_DATATYPE)
 
         # test brcg model
@@ -72,44 +95,62 @@ class RuleAIX360TestCase(unittest.TestCase):
         # test fit antehoc called correctly
         interpreter = self._build_antehoc_interpreter()
 
-        with mock.patch.object(interpreter, '_fit_antehoc') as mock_fit_antehoc:
+        with mock.patch.object(
+            interpreter, '_fit_antehoc'
+        ) as mock_fit_antehoc:
             interpreter.fit(0, 0)
             mock_fit_antehoc.assert_called_once()
 
         # test fit posthoc called correctly
         interpreter = self._build_posthoc_interpreter()
 
-        with mock.patch.object(interpreter, '_fit_posthoc') as mock_fit_posthoc:
+        with mock.patch.object(
+            interpreter, '_fit_posthoc'
+        ) as mock_fit_posthoc:
             interpreter.fit(0, 0)
             mock_fit_posthoc.assert_called_once()
 
     def testFitAntehoc(self):
         interpreter = self._build_antehoc_interpreter()
 
-        with mock.patch.object(interpreter.explainer, 'fit') as mock_explainer_fit:
+        with mock.patch.object(
+            interpreter.explainer, 'fit'
+        ) as mock_explainer_fit:
             interpreter.fit(0, 0)
             mock_explainer_fit.assert_called_once()
 
     def testFitPosthoc(self):
         interpreter = self._build_posthoc_interpreter()
 
-        with mock.patch.object(interpreter._to_interpret, 'predict') as mock_predict:
-            with mock.patch.object(interpreter, '_fit_antehoc') as mock_fit_antehoc:
+        with mock.patch.object(
+            interpreter._to_interpret, 'predict'
+        ) as mock_predict:
+            with mock.patch.object(
+                interpreter, '_fit_antehoc'
+            ) as mock_fit_antehoc:
                 interpreter.fit(0)
 
                 mock_predict.assert_called_once()
                 mock_fit_antehoc.assert_called_once()
 
-        with mock.patch.object(interpreter._to_interpret, 'predict') as mock_predict:
-            with mock.patch.object(interpreter, '_fit_antehoc') as mock_fit_antehoc:
+        with mock.patch.object(
+            interpreter._to_interpret, 'predict'
+        ) as mock_predict:
+            with mock.patch.object(
+                interpreter, '_fit_antehoc'
+            ) as mock_fit_antehoc:
                 preprocess = mock.MagicMock()
 
                 interpreter.fit(0, preprocess)
                 preprocess.assert_called_once()
                 preprocess.assert_called_with(0)
 
-        with mock.patch.object(interpreter._to_interpret, 'predict', return_value=2) as mock_predict:
-            with mock.patch.object(interpreter, '_fit_antehoc') as mock_fit_antehoc:
+        with mock.patch.object(
+            interpreter._to_interpret, 'predict', return_value=2
+        ) as mock_predict:
+            with mock.patch.object(
+                interpreter, '_fit_antehoc'
+            ) as mock_fit_antehoc:
                 postprocess = mock.MagicMock()
 
                 interpreter.fit(0, postprocess_y=postprocess)
@@ -117,11 +158,17 @@ class RuleAIX360TestCase(unittest.TestCase):
                 postprocess.assert_called_with(2)
 
     def testInterpret(self):
-        builder = choice([self._build_posthoc_interpreter, self._build_antehoc_interpreter])
+        builder = choice(
+            [self._build_posthoc_interpreter, self._build_antehoc_interpreter]
+        )
         interpreter = builder()
 
-        with mock.patch.object(interpreter.explainer, 'explain') as mock_explain:
-            with mock.patch.object(interpreter, '_visualize_explanation') as mock_visualize:
+        with mock.patch.object(
+            interpreter.explainer, 'explain'
+        ) as mock_explain:
+            with mock.patch.object(
+                interpreter, '_visualize_explanation'
+            ) as mock_visualize:
                 with self.assertRaises(RuntimeError):
                     e = interpreter.interpret()
                 interpreter._fitted = True
@@ -131,9 +178,12 @@ class RuleAIX360TestCase(unittest.TestCase):
                 mock_visualize.assert_called_once()
                 self.assertTrue(e, interpreter.explanation)
 
-
-        with mock.patch.object(interpreter.explainer, 'explain') as mock_explain:
-            with mock.patch.object(interpreter, '_save_explanation') as mock_save:
+        with mock.patch.object(
+            interpreter.explainer, 'explain'
+        ) as mock_explain:
+            with mock.patch.object(
+                interpreter, '_save_explanation'
+            ) as mock_save:
                 e = interpreter.interpret(path='')
 
                 mock_explain.assert_called_once()
@@ -147,7 +197,9 @@ class RuleAIX360TestCase(unittest.TestCase):
         pass
 
     def testSave(self):
-        builder = choice([self._build_posthoc_interpreter, self._build_antehoc_interpreter])
+        builder = choice(
+            [self._build_posthoc_interpreter, self._build_antehoc_interpreter]
+        )
         interpreter = builder()
 
         # test DataFrame
@@ -166,10 +218,14 @@ class RuleAIX360TestCase(unittest.TestCase):
                 mock_dump.assert_called_once()
 
     def testPredict(self):
-        builder = choice([self._build_posthoc_interpreter, self._build_antehoc_interpreter])
+        builder = choice(
+            [self._build_posthoc_interpreter, self._build_antehoc_interpreter]
+        )
         interpreter = builder()
 
-        with mock.patch.object(interpreter.explainer, 'predict') as mock_predict:
+        with mock.patch.object(
+            interpreter.explainer, 'predict'
+        ) as mock_predict:
             interpreter.predict(0)
             mock_predict.assert_called_once()
             mock_predict.assert_called_with(0)

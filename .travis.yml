@@ -1,6 +1,10 @@
 services:
   - docker
 
+before_script:
+  # for MAX tests
+  - docker run -it -d -p 5000:5000 codait/max-toxic-comment-classifier
+
 script:
   - docker-compose -f docker/docker-compose.yml build
   - docker run -it drugilsberg/depiction python3 -m unittest discover -t /build/ -p "*_test.py" depiction
