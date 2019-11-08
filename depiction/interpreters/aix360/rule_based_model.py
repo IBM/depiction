@@ -7,8 +7,9 @@ References:
 - Dash, S., Gunluk, O., & Wei, D. (2018). Boolean decision rules via column generation. In Advances in Neural Information Processing Systems (pp. 4655-4665).
 """
 import pickle
+import pandas as pd
 from pandas import DataFrame
-from aix360.algorithms.rbm import FeatureBinarizer, BRCGExplainer, BooleanRuleCG
+from aix360.algorithms.rbm import BRCGExplainer, BooleanRuleCG
 from aix360.algorithms.rbm import GLRMExplainer, LogisticRuleRegression, LinearRuleRegression
 
 from ...core import Task, DataType
@@ -18,7 +19,7 @@ from ..base.base_interpreter import AnteHocInterpreter
 class RuleAIX360(AnteHocInterpreter):
     _AVAILABLE_RULE_REGRESSORS = {'logistic', 'linear'}
     
-    SUPPORTED_TASK = {Task.BINARY_CLASSIFICATION}
+    SUPPORTED_TASK = {Task.BINARY}
     SUPPORTED_DATATYPE = {DataType.TABULAR}
 
     AVAILABLE_INTERPRETERS = {'brcg'}.union({'glrm_{}'.format(i) for i in _AVAILABLE_RULE_REGRESSORS})
@@ -33,7 +34,7 @@ class RuleAIX360(AnteHocInterpreter):
         """
         if model is None:
             super(RuleAIX360, self).__init__(AnteHocInterpreter.UsageMode.ANTE_HOC, 
-                                             task_type=Task.CLASSIFICATION,
+                                             task_type=Task.BINARY,
                                              data_type=DataType.TABULAR)
         else:
             super(RuleAIX360, self).__init__(AnteHocInterpreter.UsageMode.POST_HOC, 
@@ -73,7 +74,7 @@ class RuleAIX360(AnteHocInterpreter):
             preprocess_X: function to create a pandas.DataFrame from the model input to feed to this rule-based model.
             postprocess_y: function to postprocess the model output to feed to this rule-based model.
         """
-        y = self.model(X)
+        y = self._to_interpret.predict(X)
 
         processed_X = X
         processed_y = y
@@ -97,15 +98,34 @@ class RuleAIX360(AnteHocInterpreter):
                         If None, a notebook environment will be assumed, and the explanation will be visualized.
         """
         self.explanation = self.explainer.explain(**explanation_configs)
+        if path is None:
+            self._visualize_explanation(self.explanation)
+        else:
+            self._save_explanation(self.explanation, path)
+        return self.explanation
 
     def _visualize_explanation(self, explanation):
         """
         Helper function to visualize the explanation.
         """
         if isinstance(self.explainer, GLRMExplainer):
-            pass
-        else:
-            pass
+            with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+                print(explanation)
+        elif isinstance(self.explainer, BRCGExplainer):
+            # from "https://github.com/IBM/AIX360/blob/master/examples/rbm/breast-cancer-br.ipynb"
+            isCNF = 'Predict Y=0 if ANY of the following rules are satisfied, otherwise Y=1:'
+            notCNF = 'Predict Y=1 if ANY of the following rules are satisfied, otherwise Y=0:'
+            print(isCNF if explanation['isCNF'] else notCNF)
+            print()
+            for rule in explanation['rules']:
+                print(f'  - {rule}')
 
-    def _save_explanation(self, explanation):
-        pass
+    def _save_explanation(self, explanation, path):
+        if isinstance(explanation, DataFrame):
+            explanation.to_pickle(path)
+        else:
+            with open(path, 'wb') as f:
+                pickle.dump(explanation, f)
+
+    def predict(self, X, **kwargs):
+        self.explainer.predict(X, **kwargs)
