@@ -156,6 +156,7 @@ class RuleAIX360TestCase(unittest.TestCase):
             with mock.patch('{}.pickle.dump'.format(module_name)) as mock_dump:
                 interpreter._save_explanation(exp, path='')
                 mock_open.assert_called_once()
+                mock_open.assert_called_with('', 'wb')
                 mock_dump.assert_called_once()
 
     def testPredict(self):
