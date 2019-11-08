@@ -13,7 +13,7 @@ from aix360.algorithms.rbm import BRCGExplainer, BooleanRuleCG
 from aix360.algorithms.rbm import GLRMExplainer, LogisticRuleRegression, LinearRuleRegression
 
 from ...core import Task, DataType
-from ..base.base_interpreter import AnteHocInterpreter
+from ..base.base_interpreter import AnteHocInterpreter, ExplanationType
 
 
 class RuleAIX360(AnteHocInterpreter):
@@ -23,6 +23,8 @@ class RuleAIX360(AnteHocInterpreter):
     SUPPORTED_DATATYPE = {DataType.TABULAR}
 
     AVAILABLE_INTERPRETERS = {'brcg'}.union({'glrm_{}'.format(i) for i in _AVAILABLE_RULE_REGRESSORS})
+
+    EXPLANATION_TYPE = ExplanationType.GLOBAL
 
     def __init__(self, explainer, model = None, regressor_params={}):
         """
@@ -55,6 +57,8 @@ class RuleAIX360(AnteHocInterpreter):
         else:
             raise ValueError("Interpreter '{}' not supported! Available interpreters: {}".format(explainer, self.AVAILABLE_INTERPRETERS))
 
+        self._fitted = False
+
     def _fit_antehoc(self, X, y):
         """
         Fitting the rule based model (antehoc version).
@@ -64,6 +68,7 @@ class RuleAIX360(AnteHocInterpreter):
             y (array): model output data
         """
         self.explainer.fit(X, y)
+        self._fitted = True
 
     def _fit_posthoc(self, X, preprocess_X = None, postprocess_y = None):
         """
@@ -97,6 +102,9 @@ class RuleAIX360(AnteHocInterpreter):
             path (str): path where to save the explanation. 
                         If None, a notebook environment will be assumed, and the explanation will be visualized.
         """
+        if not self._fitted:
+            raise RuntimeError("Fit the model first!")
+
         self.explanation = self.explainer.explain(**explanation_configs)
         if path is None:
             self._visualize_explanation(self.explanation)
@@ -113,8 +121,8 @@ class RuleAIX360(AnteHocInterpreter):
                 print(explanation)
         elif isinstance(self.explainer, BRCGExplainer):
             # from "https://github.com/IBM/AIX360/blob/master/examples/rbm/breast-cancer-br.ipynb"
-            isCNF = 'Predict Y=0 if ANY of the following rules are satisfied, otherwise Y=1:'
-            notCNF = 'Predict Y=1 if ANY of the following rules are satisfied, otherwise Y=0:'
+            isCNF = 'Predict Y=1 if ANY of the following rules are satisfied, otherwise Y=1:'
+            notCNF = 'Predict Y=0 if ANY of the following rules are satisfied, otherwise Y=0:'
             print(isCNF if explanation['isCNF'] else notCNF)
             print()
             for rule in explanation['rules']:

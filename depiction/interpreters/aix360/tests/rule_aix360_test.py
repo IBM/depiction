@@ -50,6 +50,7 @@ class RuleAIX360TestCase(unittest.TestCase):
         self.assertTrue(isinstance(interpreter.explainer, GLRMExplainer))
         self.assertTrue(isinstance(interpreter.regressor, LogisticRuleRegression) or
                         isinstance(interpreter.regressor, LinearRuleRegression))
+        self.assertFalse(interpreter._fitted)
 
         # -- test correctness of ante-hoc model
         self.assertEqual(interpreter.usage_mode, RuleAIX360.UsageMode.ANTE_HOC)
@@ -60,10 +61,12 @@ class RuleAIX360TestCase(unittest.TestCase):
         interpreter = RuleAIX360('brcg')
         self.assertTrue(isinstance(interpreter.explainer, BRCGExplainer))
         self.assertTrue(isinstance(interpreter.regressor, BooleanRuleCG))
+        self.assertFalse(interpreter._fitted)
 
         # test with right model
         interpreter = self._build_posthoc_interpreter()
         self.assertEqual(interpreter.usage_mode, RuleAIX360.UsageMode.POST_HOC)
+        self.assertFalse(interpreter._fitted)
 
     def testFit(self):
         # test fit antehoc called correctly
@@ -119,6 +122,9 @@ class RuleAIX360TestCase(unittest.TestCase):
 
         with mock.patch.object(interpreter.explainer, 'explain') as mock_explain:
             with mock.patch.object(interpreter, '_visualize_explanation') as mock_visualize:
+                with self.assertRaises(RuntimeError):
+                    e = interpreter.interpret()
+                interpreter._fitted = True
                 e = interpreter.interpret()
 
                 mock_explain.assert_called_once()
