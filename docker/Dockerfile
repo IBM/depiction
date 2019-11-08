@@ -4,13 +4,6 @@ LABEL maintainer="Matteo Manica <drugilsberg@gmail.com>, An-phi Nguyen <nguyen.p
 # needed settings
 ENV PATH /opt/conda/bin:$PATH
 ENV LANG C
-# copy the module and setup file
-WORKDIR /build/depiction
-COPY depiction /build/depiction
-WORKDIR /build
-COPY bin /build/bin
-COPY setup.py /build/
-COPY requirements.txt /build/
 # install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gcc g++ python3-dev libxrender-dev\
@@ -19,8 +12,14 @@ RUN apt-get update \
 RUN conda config --add channels  https://conda.anaconda.org/rdkit
 RUN conda install -y rdkit==2019.03.1
 # install pip dependencies
+WORKDIR /build
+COPY requirements.txt /build/
 RUN pip install --no-cache-dir -r requirements.txt
 # install depiction
+WORKDIR /build/depiction
+COPY depiction /build/depiction
+COPY bin /build/bin
+COPY setup.py /build/
 RUN pip install --no-cache-dir /build
 # install jupyter
 RUN pip install --no-cache-dir jupyter==1.0.0

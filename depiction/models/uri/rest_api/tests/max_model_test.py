@@ -1,4 +1,5 @@
 """Test MAX model."""
+import os
 import unittest
 from random import choice
 
@@ -26,7 +27,9 @@ class MAXModelTestCase(unittest.TestCase):
 
     def test_initialization(self):
         model = ConcreteTestModel(
-            uri='http://{os.environ.get("TEST_MAX_HOST", "localhost")}:5000',
+            uri='http://{}:5000'.format(
+                os.environ.get('TEST_MAX_HOST', 'localhost')
+            ),
             task_type=choice(list(Task)),
             data_type=choice(list(DataType))
         )

@@ -6,7 +6,7 @@ services:
     environment:
       - TEST_MAX_HOST=max-host
   max-host:
-    container_name: max-toxic-comment-classifier-test
     image: codait/max-toxic-comment-classifier
+    container_name: max-toxic-comment-classifier-test
     ports:
     - "5000:5000"

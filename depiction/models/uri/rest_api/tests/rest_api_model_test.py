@@ -1,4 +1,5 @@
 """Test REST API model."""
+import os
 import unittest
 from random import choice
 
@@ -22,7 +23,9 @@ class RESTAPIModelTestCase(unittest.TestCase):
     def test_initialization(self):
         model = ConcreteTestModel(
             endpoint='predict',
-            uri='http://{os.environ.get("TEST_MAX_HOST", "localhost")}:5000',
+            uri='http://{}:5000'.format(
+                os.environ.get('TEST_MAX_HOST', 'localhost')
+            ),
             task_type=choice(list(Task)),
             data_type=choice(list(DataType))
         )
