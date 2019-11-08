@@ -13,7 +13,7 @@ COPY setup.py /build/
 COPY requirements.txt /build/
 # install system dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc python3-dev libxrender-dev\
+    && apt-get install -y --no-install-recommends gcc g++ python3-dev libxrender-dev\
     && rm -rf /var/lib/apt/lists/*
 # install rdkit
 RUN conda config --add channels  https://conda.anaconda.org/rdkit
