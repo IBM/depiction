@@ -1,0 +1,12 @@
+version: "3.2"
+services:
+  depiction:
+    container_name: depiction-test
+    image: drugilsberg/depiction
+    environment:
+      - TEST_MAX_HOST=max-host
+  max-host:
+    container_name: max-toxic-comment-classifier-test
+    image: codait/max-toxic-comment-classifier
+    ports:
+    - "5000:5000"

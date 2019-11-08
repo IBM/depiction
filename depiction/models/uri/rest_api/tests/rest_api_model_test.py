@@ -22,7 +22,7 @@ class RESTAPIModelTestCase(unittest.TestCase):
     def test_initialization(self):
         model = ConcreteTestModel(
             endpoint='predict',
-            uri='http://localhost:5000',
+            uri='http://{os.environ.get("TEST_MAX_HOST", "localhost")}:5000',
             task_type=choice(list(Task)),
             data_type=choice(list(DataType))
         )
