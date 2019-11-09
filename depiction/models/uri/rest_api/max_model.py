@@ -1,9 +1,6 @@
 """Abstract interface for MAX models."""
 import os
-import itertools
-import numpy as np
 from abc import abstractmethod
-from multiprocessing import Pool
 
 from .rest_api_model import RESTAPIModel
 
@@ -84,24 +81,3 @@ class MAXModel(RESTAPIModel):
             a prediction for the model on the given sample.
         """
         return self._process_prediction(self._predict(sample, *args, **kwargs))
-
-    def predict_many(self, samples, *args, **kwargs):
-        """
-        Run the model for inference on the given samples and with the provided
-        parameters.
-
-        Args:
-            samples (Iterable): input samples for the model.
-            args (list): list of arguments.
-            kwargs (dict): list of key-value arguments.
-
-        Returns:
-            np.array: a generator of predictions.
-        """
-        with Pool(processes=self.processes) as pool:
-            predictions = pool.starmap(
-                lambda sample, args, kwargs: np.
-                expand_dims(self.predict(sample, args, kwargs), axis=0),
-                zip(samples, itertools.repeat(args), itertools.repeat(kwargs))
-            )
-        return np.vstack(predictions)

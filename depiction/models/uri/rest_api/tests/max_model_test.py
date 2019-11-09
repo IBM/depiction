@@ -28,7 +28,7 @@ class MAXModelTestCase(unittest.TestCase):
     def test_initialization(self):
         model = ConcreteTestModel(
             uri='http://{}:5000'.format(
-                os.environ.get('TEST_MAX_HOST', 'localhost')
+                os.environ.get('TEST_MAX_BASE', 'localhost')
             ),
             task_type=choice(list(Task)),
             data_type=choice(list(DataType))

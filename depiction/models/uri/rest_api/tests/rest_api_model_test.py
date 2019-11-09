@@ -24,7 +24,7 @@ class RESTAPIModelTestCase(unittest.TestCase):
         model = ConcreteTestModel(
             endpoint='predict',
             uri='http://{}:5000'.format(
-                os.environ.get('TEST_MAX_HOST', 'localhost')
+                os.environ.get('TEST_REST_API', 'localhost')
             ),
             task_type=choice(list(Task)),
             data_type=choice(list(DataType))

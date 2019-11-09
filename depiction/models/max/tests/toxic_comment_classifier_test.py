@@ -10,8 +10,10 @@ class ToxicCommentClassifierTestCase(unittest.TestCase):
 
     def test_prediction(self):
         toxic = ToxicCommentClassifier(
-            uri='http://{}:5000'.
-            format(os.environ.get('TEST_MAX_HOST', 'localhost'))
+            uri='http://{}:5000'.format(
+                os.environ.
+                get('TEST_MAX_TOXIC_COMMENT_CLASSIFIER', 'localhost')
+            )
         )
         texts = ['This movie sucks.', 'I really liked the play.']
         self.assertEqual(
