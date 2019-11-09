@@ -11,7 +11,7 @@ class BreastCancerMitosisDetectorTestCase(unittest.TestCase):
 
     def test_prediction(self):
         model = BreastCancerMitosisDetector(
-            uri='http://{}:5001'.format(
+            uri='http://{}:5000'.format(
                 os.environ.
                 get('TEST_MAX_BREAST_CANCER_MITOSIS_DETECTOR', 'localhost')
             )

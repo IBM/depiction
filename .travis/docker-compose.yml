@@ -11,10 +11,6 @@ services:
   max-toxic-comment-classifier:
     image: codait/max-toxic-comment-classifier
     container_name: max-toxic-comment-classifier-test
-    ports:
-    - "5000:5000"
   max-breast-cancer-mitosis-detector:
     image: codait/max-breast-cancer-mitosis-detector
     container_name: max-breast-cancer-mitosis-detector-test
-    ports:
-    - "5001:5000"
