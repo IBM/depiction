@@ -7,14 +7,16 @@ from ....core import Task, DataType
 
 
 class ConcreteTestModel(BaseModel):
+
     def __init__(self, task_type, data_type):
         super(ConcreteTestModel, self).__init__(task_type, data_type)
 
-    def predict(self, sample,*, test_kwarg):
+    def predict(self, sample, *, test_kwarg):
         return sample
 
 
 class BaseModelTestCase(unittest.TestCase):
+
     def testModelConstruction(self):
         # expected inputs
         for task_type in Task:
@@ -25,20 +27,24 @@ class BaseModelTestCase(unittest.TestCase):
 
         # unexpected inputs
         with self.assertRaises(TypeError):
-            ConcreteTestModel("asad", 5)
+            ConcreteTestModel('asad', 5)
 
     def testCallback(self):
-        concrete_model = ConcreteTestModel(choice(list(Task)), choice(list(DataType)))
+        concrete_model = ConcreteTestModel(
+            choice(list(Task)), choice(list(DataType))
+        )
 
         with mock.patch.object(concrete_model, 'predict') as mock_predict:
             test_kwarg = {'test_kwarg': 'test'}
             callback = concrete_model.callback(**test_kwarg)
             test_sample = 10
-            res = callback(test_sample)
+            _ = callback(test_sample)
             mock_predict.assert_called_with(test_sample, **test_kwarg)
 
     def testPredictMany(self):
-        concrete_model = ConcreteTestModel(choice(list(Task)), choice(list(DataType)))
+        concrete_model = ConcreteTestModel(
+            choice(list(Task)), choice(list(DataType))
+        )
 
         with mock.patch.object(concrete_model, 'predict') as mock_predict:
             test_kwarg = {'test_kwarg': 'test'}

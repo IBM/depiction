@@ -17,7 +17,8 @@ class Task(Flag):
         return self.__lt__(other) or (self.value == other.value)
 
     def __gt__(self, other):
-        return ((self.value | other.value) == self.value) and (self.value != other.value)
+        return ((self.value
+                 | other.value) == self.value) and (self.value != other.value)
 
     def __ge__(self, other):
         return self.__gt__(other) or (self.value == other.value)
@@ -25,8 +26,9 @@ class Task(Flag):
     @staticmethod
     def check_support(t, tasks_set):
         """
-        Given an iterable containing tasks, checks if 'self' <= to any of the tasks in the iterable
-        
+        Given an iterable containing tasks, checks if 'self' <= to any of the
+        tasks in the iterable.
+
         Args:
             tasks_set (iterable): iterable containing tasks
         """
@@ -40,3 +42,4 @@ class DataType(Enum):
     """Enum indicating the data type used by a model."""
     TABULAR = 1
     TEXT = 2
+    IMAGE = 3

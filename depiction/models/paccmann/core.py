@@ -7,10 +7,10 @@ import numpy as np
 import tensorflow as tf
 from copy import deepcopy
 from paccmann.models import paccmann_model_fn, MODEL_SPECIFICATION_FACTORY
+
 from .smiles import process_smiles, get_smiles_language
-from ..base.base_model import BaseModel 
-from ..base.utils import get_model_file
 from ...core import Task, DataType
+from ..uri.cache.http_model import HTTPModel
 
 MODEL_PARAMS_JSON = 'model_params.json'
 MODEL_CHECKPOINT = 'model.ckpt-375000'
@@ -26,14 +26,11 @@ class CachedGraphPaccMannPredictor(object):
     https://github.com/marcsto/rl/blob/master/src/fast_predict2.py
     """
 
-    def __init__(
-        self, estimator, input_fn,
-        batch_size, checkpoint_path=None
-    ):
+    def __init__(self, estimator, input_fn, batch_size, checkpoint_path=None):
         """
         Initialize CachedGraphPaccMannPredictor.
 
-        Arguments:
+        Args:
             estimator (tf.estimator.Estimator): a PaccMann estimator.
             input_fn (Callable): an input function accepting a generator.
             batch_size (int): size of the batch supported by the estimator.
@@ -62,7 +59,7 @@ class CachedGraphPaccMannPredictor(object):
         """
         Predict on the given examples.
 
-        Arguments:
+        Args:
             examples (Iterable): an iterable of examples.
 
         Returns:
@@ -79,7 +76,7 @@ class CachedGraphPaccMannPredictor(object):
         remainder = number_of_examples % self.batch_size
         # handle remainder in samples
         if remainder > 0:
-            examples += [examples[-1]]*(self.batch_size - remainder)
+            examples += [examples[-1]] * (self.batch_size - remainder)
         self.next_examples = examples
         if self.first_run:
             self.predictions = self.estimator.predict(
@@ -91,16 +88,12 @@ class CachedGraphPaccMannPredictor(object):
         results = []
         for _ in range(iterations):
             prediction = next(self.predictions)
-            results.extend(
-                [value, 1 - value]
-                for value in prediction['IC50']
-            )
+            results.extend([value, 1 - value] for value in prediction['IC50'])
         # get rid of the optional remainder
         if remainder > 0:
             prediction = next(self.predictions)
             results.extend(
-                [value, 1 - value]
-                for value in prediction['IC50'][:remainder]
+                [value, 1 - value] for value in prediction['IC50'][:remainder]
             )
         return np.array(results)
 
@@ -111,19 +104,17 @@ class CachedGraphPaccMannPredictor(object):
         self.closed = True
         try:
             next(self.predictions)
-        except:
+        except Exception:
             pass
 
 
 def generator_fn_to_dataset(
-    generator_fn,
-    number_of_genes, smiles_length,
-    batch_size
+    generator_fn, number_of_genes, smiles_length, batch_size
 ):
     """
     Get a tf.data.Dataset from a generator function.
 
-    Arguments:
+    Args:
         generator_fn (Callable): a generator function.
         number_of_genes (int): number of the gene considered.
         smiles_length (int): maximum SMILES length.
@@ -145,14 +136,12 @@ def generator_fn_to_dataset(
 
 
 def paccmann_smiles_input_fn(
-    generator, cell_line,
-    number_of_genes, smiles_length,
-    batch_size
+    generator, cell_line, number_of_genes, smiles_length, batch_size
 ):
-    """ 
+    """
     Input for SMILES data.
-    
-    Arguments:
+
+    Args:
         generator (generator): a generator providing SMILES.
         cell_line (np.array): an array containing cell line gene expression.
         number_of_genes (int): number of the gene considered.
@@ -161,28 +150,26 @@ def paccmann_smiles_input_fn(
     Returns:
         an input function accepting a SMILES generator.
     """
+
     def generator_fn():
         for smiles in generator:
             yield {
                 'selected_genes_20': cell_line.astype(np.float32),
                 'smiles_atom_tokens': np.array(process_smiles(smiles))
             }
+
     return lambda: generator_fn_to_dataset(
-        generator_fn,
-        number_of_genes, smiles_length,
-        batch_size
+        generator_fn, number_of_genes, smiles_length, batch_size
     )
 
 
 def paccmann_cell_line_input_fn(
-    generator, smiles,
-    number_of_genes, smiles_length,
-    batch_size
+    generator, smiles, number_of_genes, smiles_length, batch_size
 ):
-    """ 
+    """
     Input for cell line data.
-    
-    Arguments:
+
+    Args:
         generator (generator): a generator providing cell line data.
         smiles (str): a SMILES representing a molecule.
         number_of_genes (int): number of the gene considered.
@@ -191,25 +178,26 @@ def paccmann_cell_line_input_fn(
     Returns:
         an input function accepting a cell line generator.
     """
+
     def generator_fn():
         for cell_line in generator:
             yield {
                 'selected_genes_20': cell_line.astype(np.float32),
                 'smiles_atom_tokens': np.array(process_smiles(smiles))
             }
+
     return lambda: generator_fn_to_dataset(
-        generator_fn,
-        number_of_genes, smiles_length,
-        batch_size
+        generator_fn, number_of_genes, smiles_length, batch_size
     )
 
 
-class PaccMann(BaseModel):
+class PaccMann(HTTPModel):
     """Multimodal classification of drug sensitivity."""
 
     def __init__(
-        self, 
-        data_type, filename='paccmann.zip',
+        self,
+        data_type,
+        filename='paccmann.zip',
         origin='https://ibm.box.com/shared/static/dy2x4cen1dsrc738uewmv1iccdawlqwd.zip',
         model_type='mca',
         model_params_json='model_params.json',
@@ -219,9 +207,10 @@ class PaccMann(BaseModel):
         cache_dir=tempfile.mkdtemp()
     ):
         """
-        Initalize the Model.
-        
-        Arguments:
+        Initalize PaccMann.
+
+        Args:
+            data_type (depiction.core.DataType): data type.
             filename (str): model zip.
             origin (str): url where the model is stored.
             model_type (str): multimodal encoder type.
@@ -231,12 +220,15 @@ class PaccMann(BaseModel):
             number_of_genes (int): number of the gene considered.
             smiles_length (int): maximum SMILES length.
             args (Iterable): list of arguments.
-            kwargs (dict): list of key-value arguments.
+            cache_dir (str): cache directory.
         """
         super().__init__(
-            Task.CLASSIFICATION, data_type
+            uri=origin,
+            task=Task.CLASSIFICATION,
+            data_type=data_type,
+            cache_dir=cache_dir,
+            filename=filename
         )
-        self.model_path = get_model_file(filename, origin, cache_dir)
         # store initalization parameters
         self.model_type = model_type
         self.model_params_json = model_params_json
@@ -245,8 +237,7 @@ class PaccMann(BaseModel):
         self.smiles_length = smiles_length
         # make sure the model is present
         self.model_dir = os.path.join(
-            os.path.dirname(self.model_path),
-            'paccmann'
+            os.path.dirname(self.model_path), 'paccmann'
         )
         if not os.path.exists(self.model_dir):
             with zipfile.ZipFile(self.model_path) as zip_fp:
@@ -256,13 +247,18 @@ class PaccMann(BaseModel):
         with open(os.path.join(self.model_dir, self.model_params_json)) as fp:
             self.params = json.load(fp)
         self.batch_size = self.params['eval_batch_size']
-        self.checkpoint_path = os.path.join(self.model_dir, self.model_checkpoint)
+        self.checkpoint_path = os.path.join(
+            self.model_dir, self.model_checkpoint
+        )
         # initialize the estimator
         self.estimator = tf.estimator.Estimator(
             model_fn=(
                 lambda features, labels, mode, params: paccmann_model_fn(
-                    features, labels, mode, params,
-                    model_specification_fn=(
+                    features,
+                    labels,
+                    mode,
+                    params,
+                    model_specification_fn=(  # yapf-disable
                         MODEL_SPECIFICATION_FACTORY[self.model_type]
                     )
                 )
@@ -280,7 +276,7 @@ class PaccMann(BaseModel):
         Run the model for inference on a given sample and with the provided
         parameters.
 
-        Arguments:
+        Args:
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
 
@@ -289,11 +285,13 @@ class PaccMann(BaseModel):
         """
         return self.predictor.predict(sample)
 
+
 class PaccMannSmiles(PaccMann):
     """Multimodal classification of drug sensitivity for a given cell line."""
 
     def __init__(
-        self, cell_line, 
+        self,
+        cell_line,
         filename='paccmann.zip',
         origin='https://ibm.box.com/shared/static/dy2x4cen1dsrc738uewmv1iccdawlqwd.zip',
         model_type='mca',
@@ -305,9 +303,10 @@ class PaccMannSmiles(PaccMann):
     ):
         """
         Initalize the Model.
-        
-        Arguments:
-            cell_line (np.array): an array containing cell line gene expression.
+
+        Args:
+            cell_line (np.array): an array containing cell line gene
+                expression.
             filename (str): model zip.
             origin (str): url where the model is stored.
             model_type (str): multimodal encoder type.
@@ -316,23 +315,20 @@ class PaccMannSmiles(PaccMann):
             model_checkpoints (str): name of the checkpoint.
             number_of_genes (int): number of the gene considered.
             smiles_length (int): maximum SMILES length.
-            args (Iterable): list of arguments.
-            kwargs (dict): list of key-value arguments.
+            cache_dir (str): cache directory.
         """
         self.cell_line = cell_line
-        super().__init__(DataType.TEXT,
-            filename, origin, model_type, model_params_json,
-            model_checkpoint, number_of_genes, smiles_length,
-            cache_dir
+        super().__init__(
+            DataType.TEXT, filename, origin, model_type, model_params_json,
+            model_checkpoint, number_of_genes, smiles_length, cache_dir
         )
         self.input_fn = lambda generator: paccmann_smiles_input_fn(
-            generator, self.cell_line,
-            self.number_of_genes, self.smiles_length,
-            self.batch_size
+            generator, self.cell_line, self.number_of_genes, self.
+            smiles_length, self.batch_size
         )
         self.predictor = CachedGraphPaccMannPredictor(
-            self.estimator, self.input_fn,
-            self.batch_size, self.checkpoint_path
+            self.estimator, self.input_fn, self.batch_size,
+            self.checkpoint_path
         )
 
 
@@ -340,7 +336,8 @@ class PaccMannCellLine(PaccMann):
     """Multimodal classification of drug sensitivity for a given SMILES."""
 
     def __init__(
-        self, smiles,
+        self,
+        smiles,
         filename='paccmann.zip',
         origin='https://ibm.box.com/shared/static/dy2x4cen1dsrc738uewmv1iccdawlqwd.zip',
         model_type='mca',
@@ -352,8 +349,8 @@ class PaccMannCellLine(PaccMann):
     ):
         """
         Initalize the Model.
-        
-        Arguments:
+
+        Args:
             smiles (str): a SMILES representing a molecule.
             filename (str): model zip.
             origin (str): url where the model is stored.
@@ -363,21 +360,18 @@ class PaccMannCellLine(PaccMann):
             model_checkpoints (str): name of the checkpoint.
             number_of_genes (int): number of the gene considered.
             smiles_length (int): maximum SMILES length.
-            args (Iterable): list of arguments.
-            kwargs (dict): list of key-value arguments.
+            cache_dir (str): cache directory.
         """
         self.smiles = smiles
-        super().__init__(DataType.TABULAR,
-            filename, origin, model_type, model_params_json,
-            model_checkpoint, number_of_genes, smiles_length,
-            cache_dir
+        super().__init__(
+            DataType.TABULAR, filename, origin, model_type, model_params_json,
+            model_checkpoint, number_of_genes, smiles_length, cache_dir
         )
         self.input_fn = lambda generator: paccmann_cell_line_input_fn(
-            generator, self.smiles,
-            self.number_of_genes, self.smiles_length,
+            generator, self.smiles, self.number_of_genes, self.smiles_length,
             self.batch_size
         )
         self.predictor = CachedGraphPaccMannPredictor(
-            self.estimator, self.input_fn,
-            self.batch_size, self.checkpoint_path
+            self.estimator, self.input_fn, self.batch_size,
+            self.checkpoint_path
         )

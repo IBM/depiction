@@ -1,9 +1,10 @@
-from ..base.base_model import BaseModel
-from ..base.utils import get_model_file
-from ...core import Task, DataType
+"""CellTyper model."""
 from tensorflow import keras
 import tempfile
 from tensorflow.keras.utils import to_categorical
+
+from ..uri.cache.http_model import HTTPModel
+from ...core import Task, DataType
 
 
 def one_hot_encoding(classes):
@@ -14,7 +15,7 @@ def one_hot_decoding(labels):
     return labels.argmax(axis=1) + 1
 
 
-class CellTyper(BaseModel):
+class CellTyper(HTTPModel):
     """Classifier of single cells."""
     celltype_names = {
         1: 'CD11b- Monocyte',
@@ -36,16 +37,23 @@ class CellTyper(BaseModel):
         17: 'Plasmacytoid DC',
         18: 'Platelet',
         19: 'Pre-B II',
-        20: 'Pre-B I'}
+        20: 'Pre-B I'
+    }
 
-    def __init__(self, filename='celltype_model.h5',
-                 origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',
-                 cache_dir=tempfile.mkdtemp()):
-        """Initalize the Model."""
-        super(CellTyper, self).__init__(
-            Task.CLASSIFICATION, DataType.TABULAR
+    def __init__(
+        self,
+        filename='celltype_model.h5',
+        origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',
+        cache_dir=tempfile.mkdtemp()
+    ):
+        """Initalize the CellTyper."""
+        super().__init__(
+            uri=origin,
+            task=Task.CLASSIFICATION,
+            data_type=DataType.TABULAR,
+            cache_dir=cache_dir,
+            filename=filename
         )
-        self.model_path = get_model_file(filename, origin, cache_dir)
         self.model = keras.models.load_model(self.model_path)
 
     def predict(self, sample, **kwargs):
@@ -53,7 +61,7 @@ class CellTyper(BaseModel):
         Run the model for inference on a given sample and with the provided
         parameters.
 
-        Arguments:
+        Args:
             sample (object): an input sample for the model.
             kwargs (dict): list of key-value arguments.
 
@@ -61,13 +69,12 @@ class CellTyper(BaseModel):
             a prediction for the model on the given sample.
         """
         return self.model.predict(
-            sample,
-            batch_size=None, verbose=0, steps=None, callbacks=None
+            sample, batch_size=None, verbose=0, steps=None, callbacks=None
         )
 
     @staticmethod
     def logits_to_celltype(predictions):
         return [
-            CellTyper.celltype_names[category] for
-            category in one_hot_decoding(predictions)
+            CellTyper.celltype_names[category]
+            for category in one_hot_decoding(predictions)
         ]
