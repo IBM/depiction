@@ -8,20 +8,17 @@ from ..uri.rest_api.max_model import MAXModel
 class ToxicCommentClassifier(MAXModel):
     """MAX Toxic Comment Classifier."""
 
-    def __init__(self, uri, processes=1):
+    def __init__(self, uri):
         """
         Initialize MAX Toxic Comment Classifier.
 
         Args:
             uri (str): URI to access the model.
-            processess (int): process used in predict_many.
-                Defaults to 1.
         """
         super().__init__(
             uri=uri,
             task=Task.MULTICLASS,
-            data_type=DataType.TEXT,
-            processes=processes
+            data_type=DataType.TEXT
         )
         self.labels = sorted(
             self._request(method='get',
