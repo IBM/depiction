@@ -52,7 +52,7 @@ class MAXModel(RESTAPIModel):
     def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Args:
             sample (object): an input sample for the model.
@@ -67,7 +67,7 @@ class MAXModel(RESTAPIModel):
     def predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Args:
             sample (object): an input sample for the model.
