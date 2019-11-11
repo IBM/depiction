@@ -1,6 +1,5 @@
 """Core module for torchvision models."""
 import torch
-import numpy as np
 import torchvision.transforms as transforms
 
 from .core import TorchModel
