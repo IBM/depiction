@@ -1,4 +1,4 @@
 """PaccMann initialization."""
-from .core import (
+from .core import (  # noqa
     PaccMann, PaccMannCellLine, PaccMannSmiles
 )

@@ -1,0 +1,16 @@
+version: "3.2"
+services:
+  depiction:
+    container_name: depiction-test
+    image: drugilsberg/depiction
+    environment:
+      - TEST_REST_API=max-toxic-comment-classifier
+      - TEST_MAX_BASE=max-toxic-comment-classifier
+      - TEST_MAX_TOXIC_COMMENT_CLASSIFIER=max-toxic-comment-classifier
+      - TEST_MAX_BREAST_CANCER_MITOSIS_DETECTOR=max-breast-cancer-mitosis-detector
+  max-toxic-comment-classifier:
+    image: codait/max-toxic-comment-classifier
+    container_name: max-toxic-comment-classifier-test
+  max-breast-cancer-mitosis-detector:
+    image: codait/max-breast-cancer-mitosis-detector
+    container_name: max-breast-cancer-mitosis-detector-test
