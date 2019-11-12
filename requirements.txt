@@ -3,11 +3,13 @@ pandas==0.24.2
 scikit-learn==0.21.2
 tensorflow==1.14.0
 torch>=1.0.0
+torchvision>=0.2.1
 seaborn==0.9.0
 lime==0.1.1.32
 requests==2.22.0
 minio==5.0.4
 imageio==2.6.1
 aix360==0.1.0
+alibi==0.3.2
 anchor_custom @ git+https://github.com/phineasng/anchor@6419bbdfb46b3f1c0d7738e521623856b92bf5af#egg=anchor_custom-0.0.0.5
 paccmann @ git+https://github.com/drugilsberg/paccmann@77eaedb860b66c32d541398c32caa34e93b7c443#egg=paccmann-0.1

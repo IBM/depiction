@@ -10,20 +10,17 @@ from ..uri.rest_api.max_model import MAXModel
 class BreastCancerMitosisDetector(MAXModel):
     """MAX Breast Cancer Mitosis Detector Keras Model."""
 
-    def __init__(self, uri, processes=1):
+    def __init__(self, uri):
         """
         Initialize MAX Breast Cancer Mitosis Detector Keras Model.
 
         Args:
             uri (str): URI to access the model.
-            processess (int): process used in predict_many.
-                Defaults to 1.
         """
         super().__init__(
             uri=uri,
             task=Task.BINARY,
-            data_type=DataType.IMAGE,
-            processes=processes
+            data_type=DataType.IMAGE
         )
         self.labels = ['non mitotic', 'mitotic']
 
@@ -49,7 +46,7 @@ class BreastCancerMitosisDetector(MAXModel):
     def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Args:
             sample (object): an input sample for the model.

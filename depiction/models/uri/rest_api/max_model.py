@@ -13,7 +13,7 @@ class MAXModel(RESTAPIModel):
     https://developer.ibm.com/exchanges/models/all/.
     """
 
-    def __init__(self, uri, task, data_type, processes=1):
+    def __init__(self, uri, task, data_type):
         """
         Initalize a MAX model.
 
@@ -21,8 +21,6 @@ class MAXModel(RESTAPIModel):
             uri (str): URI to access the model.
             task (depiction.core.Task): task type.
             data_type (depiction.core.DataType): data type.
-            processess (int): process used in predict_many.
-                Defaults to 1.
         """
         self.base_endpoint = 'model'
         super().__init__(
@@ -33,7 +31,6 @@ class MAXModel(RESTAPIModel):
         )
         self.metadata_endpoint = os.path.join(self.base_endpoint, 'metadata')
         self.labels_endpoint = os.path.join(self.base_endpoint, 'labels')
-        self.processes = processes
         self.metadata = self._request(
             method='get', endpoint=self.metadata_endpoint
         )
@@ -55,7 +52,7 @@ class MAXModel(RESTAPIModel):
     def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Args:
             sample (object): an input sample for the model.
@@ -70,7 +67,7 @@ class MAXModel(RESTAPIModel):
     def predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Args:
             sample (object): an input sample for the model.
