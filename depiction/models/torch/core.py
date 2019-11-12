@@ -9,7 +9,7 @@ class TorchModel(BaseModel):
 
     def __init__(self, model, task, data_type):
         """
-        Initalize a Model.
+        Initalize a TorchModel.
 
         Args:
             model (torch.nn.Module): model to wrap.
