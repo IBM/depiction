@@ -33,7 +33,7 @@ class ToxicCommentClassifier(MAXModel):
             prediction (dict): json prediction response.
 
         Returns:
-            np.array: numpy array representing the prediction.
+            np.ndarray: numpy array representing the prediction.
         """
         return np.array(
             [

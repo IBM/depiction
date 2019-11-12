@@ -29,7 +29,7 @@ class TorchVisionModel(TorchModel):
         Prepare sample for the model.
 
         Args:
-            sample (np.array): an input sample for the model.
+            sample (np.ndarray): an input sample for the model.
 
         Returns:
             torch.tensor: a tensor representing the sample.

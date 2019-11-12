@@ -143,7 +143,7 @@ def paccmann_smiles_input_fn(
 
     Args:
         generator (generator): a generator providing SMILES.
-        cell_line (np.array): an array containing cell line gene expression.
+        cell_line (np.ndarray): an array containing cell line gene expression.
         number_of_genes (int): number of the gene considered.
         smiles_length (int): maximum SMILES length.
         batch_size (int): size of the batch.
@@ -305,7 +305,7 @@ class PaccMannSmiles(PaccMann):
         Initalize the Model.
 
         Args:
-            cell_line (np.array): an array containing cell line gene
+            cell_line (np.ndarray): an array containing cell line gene
                 expression.
             filename (str): model zip.
             origin (str): url where the model is stored.
