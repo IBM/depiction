@@ -44,8 +44,8 @@ class KerasModel(BaseModel):
 
         Args:
             sample (np.array): an input sample for the model.
-            args (list): list of arguments.
-            kwargs (dict): list of key-value arguments.
+            args (list): list of arguments for prediction.
+            kwargs (dict): list of key-value arguments for prediction.
 
         Returns:
             np.array: a prediction for the model on the given sample.
@@ -53,5 +53,5 @@ class KerasModel(BaseModel):
         predict_kwargs = copy.deepcopy(self._predict_kwargs)
         predict_kwargs.update(**kwargs)
         return self._model.predict(
-            sample, **predict_kwargs
+            self._prepare_sample(sample), *args, **predict_kwargs
         )
