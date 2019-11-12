@@ -46,7 +46,7 @@ class BreastCancerMitosisDetector(MAXModel):
     def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
-        arameters.
+        parameters.
 
         Args:
             sample (object): an input sample for the model.

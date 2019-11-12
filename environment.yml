@@ -11,6 +11,7 @@ dependencies:
     - scikit-learn==0.21.2
     - tensorflow==1.14.0
     - torch>=1.0.0
+    - torchvision>=0.2.1
     - seaborn==0.9.0
     - lime==0.1.1.32
     - requests==2.22.0
