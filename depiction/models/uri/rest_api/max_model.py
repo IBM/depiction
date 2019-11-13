@@ -44,7 +44,7 @@ class MAXModel(RESTAPIModel):
             prediction (dict): json prediction response.
 
         Returns:
-            np.array: numpy array representing the prediction.
+            np.ndarray: numpy array representing the prediction.
         """
         raise NotImplementedError
 

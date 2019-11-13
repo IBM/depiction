@@ -4,15 +4,10 @@
 References:
     https://arxiv.org/abs/1802.07623
 """
-from typing import Union
+from alibi.explainers import CEM as CEMImplementation
 
-import numpy as np
-import tensorflow as tf
-from alibi.explainers import CEM as CEM_implementation
-
-from ...core import DataType, Task
-from ...models.base.base_model import BaseModel
-from ..base.base_interpreter import BaseInterpreter
+from ....core import DataType, Task
+from ...base.base_interpreter import BaseInterpreter
 
 
 class CEM(BaseInterpreter):
@@ -23,28 +18,28 @@ class CEM(BaseInterpreter):
     """
 
     SUPPORTED_TASK = {Task.CLASSIFICATION}
-    SUPPORTED_DATATYPE = {DataType.TABULAR}  # TODO , DataType.IMAGE
+    SUPPORTED_DATATYPE = {DataType.TABULAR, DataType.IMAGE}
 
     def __init__(
         self,
-        model: BaseModel,
-        mode: str,
-        shape: tuple,
-        kappa: float = 0.,
-        beta: float = .1,
-        feature_range: tuple = (-1e10, 1e10),
-        gamma: float = 0.,
-        ae_model: BaseModel = None,
-        learning_rate_init: float = 1e-2,
-        max_iterations: int = 1000,
-        c_init: float = 10.,
-        c_steps: int = 10,
-        eps: tuple = (1e-3, 1e-3),
-        clip: tuple = (-100., 100.),
-        update_num_grad: int = 1,
-        no_info_val: Union[float, np.ndarray] = None,
-        write_dir: str = None,
-        sess: tf.compat.v1.Session = None
+        model,
+        mode,
+        shape,
+        kappa=0.,
+        beta=.1,
+        feature_range=(-1e10, 1e10),
+        gamma=0.,
+        ae_model=None,
+        learning_rate_init=1e-2,
+        max_iterations=1000,
+        c_init=10.,
+        c_steps=10,
+        eps=(1e-3, 1e-3),
+        clip=(-100., 100.),
+        update_num_grad=1,
+        no_info_val=None,
+        write_dir=None,
+        sess=None
     ):
         """Constructor.
 
@@ -107,29 +102,16 @@ class CEM(BaseInterpreter):
         """
         super().__init__(model)
 
-        self.explainer = CEM_implementation(
-            model.predict,
-            mode,
-            shape,
-            kappa,
-            beta,
-            feature_range,
-            gamma,
+        self.explainer = CEMImplementation(
+            model.predict, mode, shape, kappa, beta, feature_range, gamma,
             ae_model.predict if ae_model is not None else ae_model,
-            learning_rate_init,
-            max_iterations,
-            c_init,
-            c_steps,
-            eps,
-            clip,
-            update_num_grad,
-            no_info_val,
-            write_dir,
-            sess
+            learning_rate_init, max_iterations, c_init, c_steps, eps, clip,
+            update_num_grad, no_info_val, write_dir, sess
         )
 
-    def interpret(self, X: np.ndarray, Y: np.ndarray = None,
-                  verbose: bool = False):
+    def interpret(
+        self, X, Y=None, verbose=False
+    ):
         """Explain instance and return PP or PN with metadata.
 
         Args:
@@ -142,7 +124,7 @@ class CEM(BaseInterpreter):
         """
         return self.explainer.explain(X, Y, verbose)
 
-    def fit(self, train_data: np.ndarray, no_info_type: str = 'median'):
+    def fit(self, train_data, no_info_type='median'):
         """Get 'no information' values from the training data.
 
         Args:

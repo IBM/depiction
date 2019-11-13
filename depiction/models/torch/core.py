@@ -24,7 +24,7 @@ class TorchModel(BaseModel):
         Prepare sample for the model.
 
         Args:
-            sample (np.array): an input sample for the model.
+            sample (np.ndarray): an input sample for the model.
 
         Returns:
             torch.tensor: a tensor representing the sample.
@@ -37,11 +37,11 @@ class TorchModel(BaseModel):
         parameters.
 
         Args:
-            sample (np.array): an input sample for the model.
+            sample (np.ndarray): an input sample for the model.
             args (list): list of arguments.
             kwargs (dict): list of key-value arguments.
 
         Returns:
-            np.array: a prediction for the model on the given sample.
+            np.ndarray: a prediction for the model on the given sample.
         """
         return self._model(self._prepare_sample(sample)).detach().numpy()
