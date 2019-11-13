@@ -10,6 +10,7 @@ from depiction.models.base.base_model import BaseModel
 
 
 class SKLearnModel(BaseModel):
+
     def __init__(self, clf):
         super().__init__(Task.CLASSIFICATION, DataType.TABULAR)
         self.clf = clf
@@ -73,7 +74,10 @@ class CEMTestCase(unittest.TestCase):
             if cem.best_attack:
                 self.assertGreaterEqual(
                     set(explanation.keys()),
-                    {'X', 'X_pred', mode, f'{mode}_pred', 'grads_graph', 'grads_num'}  # noqa
+                    {
+                        'X', 'X_pred', mode, f'{mode}_pred', 'grads_graph',
+                        'grads_num'
+                    }  # noqa
                 )
                 self.assertGreater(
                     (explanation['X'] != explanation[mode]).astype(int).sum(),

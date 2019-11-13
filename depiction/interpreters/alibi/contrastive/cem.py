@@ -109,9 +109,7 @@ class CEM(BaseInterpreter):
             update_num_grad, no_info_val, write_dir, sess
         )
 
-    def interpret(
-        self, X, Y=None, verbose=False
-    ):
+    def interpret(self, X, Y=None, verbose=False):
         """Explain instance and return PP or PN with metadata.
 
         Args:

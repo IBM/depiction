@@ -1,3 +1,4 @@
+"""Counterfactual explanation test."""
 import unittest
 
 import numpy as np
@@ -62,14 +63,8 @@ class CEMTestCase(unittest.TestCase):
             counterfactual.return_dict['meta']['name'],
             counterfactual.__class__.__name__
         )
-        self.assertEqual(
-            explanation['cf']['X'].shape,
-            X_to_interpret.shape
-        )
-        self.assertEqual(
-            len(explanation['all']),
-            counterfactual.max_lam_steps
-        )
+        self.assertEqual(explanation['cf']['X'].shape, X_to_interpret.shape)
+        self.assertEqual(len(explanation['all']), counterfactual.max_lam_steps)
 
 
 if __name__ == "__main__":
