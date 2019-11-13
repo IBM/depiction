@@ -17,11 +17,7 @@ class BreastCancerMitosisDetector(MAXModel):
         Args:
             uri (str): URI to access the model.
         """
-        super().__init__(
-            uri=uri,
-            task=Task.BINARY,
-            data_type=DataType.IMAGE
-        )
+        super().__init__(uri=uri, task=Task.BINARY, data_type=DataType.IMAGE)
         self.labels = ['non mitotic', 'mitotic']
 
     def _process_prediction(self, prediction):

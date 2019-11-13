@@ -17,7 +17,4 @@ class TorchVisionModelTestCase(unittest.TestCase):
             data_type=DataType.IMAGE
         )
         image = np.random.randn(1, 3, 224, 224)
-        self.assertEqual(
-            model.predict(image).shape,
-            (1, 1000)
-        )
+        self.assertEqual(model.predict(image).shape, (1, 1000))

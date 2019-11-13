@@ -16,9 +16,7 @@ class ToxicCommentClassifier(MAXModel):
             uri (str): URI to access the model.
         """
         super().__init__(
-            uri=uri,
-            task=Task.MULTICLASS,
-            data_type=DataType.TEXT
+            uri=uri, task=Task.MULTICLASS, data_type=DataType.TEXT
         )
         self.labels = sorted(
             self._request(method='get',
