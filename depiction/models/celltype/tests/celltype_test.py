@@ -1,11 +1,11 @@
-from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from pathlib import Path
 
 import pandas as pd
 
-from ..celltype import CellTyper
+from depiction.models.celltype.celltype import CellTyper
 
 
 class CellTyperTestCase(unittest.TestCase):

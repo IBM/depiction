@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from ..utils import get_model_file, MODELS_SUBDIR
+from depiction.models.base.utils import MODELS_SUBDIR, get_model_file
 
 
 class BaseUtilsTestCase(unittest.TestCase):

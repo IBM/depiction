@@ -1,9 +1,9 @@
 import unittest
-from unittest import mock
 from random import choice
+from unittest import mock
 
-from ..base_model import BaseModel
-from ....core import Task, DataType
+from depiction.core import DataType, Task
+from depiction.models.base.base_model import BaseModel
 
 
 class ConcreteTestModel(BaseModel):

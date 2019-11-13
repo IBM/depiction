@@ -3,8 +3,8 @@ import os
 import unittest
 from random import choice
 
-from .....core import Task, DataType
-from ..max_model import MAXModel
+from depiction.core import Task, DataType
+from depiction.models.uri.rest_api.max_model import MAXModel
 
 
 class ConcreteTestModel(MAXModel):

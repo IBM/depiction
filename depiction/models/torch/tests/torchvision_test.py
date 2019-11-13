@@ -1,10 +1,11 @@
 """Test TorchVisionModel."""
 import unittest
+
 import numpy as np
 import torchvision.models as models
 
-from ....core import Task, DataType
-from ..torchvision import TorchVisionModel
+from depiction.core import DataType, Task
+from depiction.models.torch.torchvision import TorchVisionModel
 
 
 class TorchVisionModelTestCase(unittest.TestCase):

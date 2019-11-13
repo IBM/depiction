@@ -1,9 +1,11 @@
 """Test MAX toxic comment classifier."""
 import os
 import unittest
+
 import numpy as np
 
-from ..breast_cancer_mitosis_detector import BreastCancerMitosisDetector
+from depiction.models.max.breast_cancer_mitosis_detector import \
+    BreastCancerMitosisDetector
 
 
 class BreastCancerMitosisDetectorTestCase(unittest.TestCase):

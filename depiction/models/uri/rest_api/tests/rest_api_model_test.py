@@ -3,8 +3,8 @@ import os
 import unittest
 from random import choice
 
-from .....core import Task, DataType
-from ..rest_api_model import RESTAPIModel
+from depiction.core import DataType, Task
+from depiction.models.uri.rest_api.rest_api_model import RESTAPIModel
 
 
 class ConcreteTestModel(RESTAPIModel):

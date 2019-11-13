@@ -2,7 +2,8 @@
 import os
 import unittest
 
-from ..toxic_comment_classifier import ToxicCommentClassifier
+from depiction.models.max.toxic_comment_classifier import \
+    ToxicCommentClassifier
 
 
 class ToxicCommentClassifierTestCase(unittest.TestCase):
