@@ -95,3 +95,7 @@ class UWasherTestCase(unittest.TestCase):
             mock_explain.assert_called_once()
             self.assertEqual(explanation.SHOW_IN_NOTEBOOK, False)
             self.assertEqual(explanation.PATH, dummy_path)
+
+
+if __name__ == "__main__":
+    unittest.main()

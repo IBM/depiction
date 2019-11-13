@@ -128,3 +128,7 @@ class AnteHocInterpreterTestCase(unittest.TestCase):
         with mock.patch.object(interpreter, '_fit_posthoc') as mock_fit:
             interpreter.fit(0, 0)
             mock_fit.assert_called_with(0, 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

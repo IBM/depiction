@@ -36,3 +36,7 @@ class CellTyperTestCase(unittest.TestCase):
     def tearDown(self):
         """Tear down the tests."""
         shutil.rmtree(self.tmp_dir)
+
+
+if __name__ == "__main__":
+    unittest.main()

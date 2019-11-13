@@ -53,3 +53,7 @@ class BaseModelTestCase(unittest.TestCase):
                 pass
             for s in test_samples:
                 mock_predict.assert_any_call(s, **test_kwarg)
+
+
+if __name__ == "__main__":
+    unittest.main()

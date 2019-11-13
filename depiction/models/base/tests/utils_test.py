@@ -19,3 +19,7 @@ class BaseUtilsTestCase(unittest.TestCase):
             mock_get_file.assert_called_with(
                 fname, origin, cache_subdir=MODELS_SUBDIR, cache_dir=cache_dir
             )
+
+
+if __name__ == "__main__":
+    unittest.main()

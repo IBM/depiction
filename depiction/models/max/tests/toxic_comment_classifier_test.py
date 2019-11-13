@@ -20,3 +20,7 @@ class ToxicCommentClassifierTestCase(unittest.TestCase):
         self.assertEqual(
             toxic.predict(texts).shape, (len(texts), len(toxic.labels))
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

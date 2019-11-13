@@ -42,3 +42,7 @@ class RESTAPIModelTestCase(unittest.TestCase):
                 json={'text': ['a test.', 'another test.']}
             ), dict
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

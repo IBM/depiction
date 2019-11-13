@@ -22,3 +22,7 @@ class TorchVisionModelTestCase(unittest.TestCase):
             model.predict(image).shape,
             (1, 1000)
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

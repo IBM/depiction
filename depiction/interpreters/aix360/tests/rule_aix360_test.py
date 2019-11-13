@@ -2,8 +2,7 @@ import unittest
 from random import choice
 from unittest import mock
 
-from aix360.algorithms.rbm import (BooleanRuleCG, BRCGExplainer,
-                                   FeatureBinarizer, GLRMExplainer,
+from aix360.algorithms.rbm import (BooleanRuleCG, BRCGExplainer, GLRMExplainer,
                                    LinearRuleRegression,
                                    LogisticRuleRegression)
 from pandas import DataFrame
@@ -232,3 +231,7 @@ class RuleAIX360TestCase(unittest.TestCase):
             interpreter.predict(0)
             mock_predict.assert_called_once()
             mock_predict.assert_called_with(0)
+
+
+if __name__ == "__main__":
+    unittest.main()

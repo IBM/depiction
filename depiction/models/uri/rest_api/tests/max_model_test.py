@@ -37,3 +37,7 @@ class MAXModelTestCase(unittest.TestCase):
         self.assertEqual(model.metadata_endpoint, 'model/metadata')
         self.assertEqual(model.labels_endpoint, 'model/labels')
         self.assertEqual(model.endpoint, 'model/predict')
+
+
+if __name__ == "__main__":
+    unittest.main()

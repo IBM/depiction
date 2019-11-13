@@ -20,3 +20,7 @@ class BreastCancerMitosisDetectorTestCase(unittest.TestCase):
         )
         image = np.random.randn(64, 64, 3)
         self.assertEqual(model.predict(image).shape, (1, len(model.labels)))
+
+
+if __name__ == "__main__":
+    unittest.main()
