@@ -135,8 +135,8 @@ class RuleAIX360(AnteHocInterpreter):
                 print(explanation)
         elif isinstance(self.explainer, BRCGExplainer):
             # from "https://github.com/IBM/AIX360/blob/master/examples/rbm/breast-cancer-br.ipynb"
-            isCNF = 'Predict Y=1 if ANY of the following rules are satisfied, otherwise Y=1:'
-            notCNF = 'Predict Y=0 if ANY of the following rules are satisfied, otherwise Y=0:'
+            isCNF = 'Predict Y=1 if ANY of the following rules are satisfied, otherwise Y=0:'
+            notCNF = 'Predict Y=0 if ANY of the following rules are satisfied, otherwise Y=1:'
             print(isCNF if explanation['isCNF'] else notCNF)
             print()
             for rule in explanation['rules']:
