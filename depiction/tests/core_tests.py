@@ -1,6 +1,6 @@
 import unittest
 
-from ..core import Task
+from depiction.core import Task
 
 
 class TaskTestCase(unittest.TestCase):
@@ -51,3 +51,7 @@ class TaskTestCase(unittest.TestCase):
         self.assertTrue(Task.check_support(Task.BINARY, supported))
         self.assertTrue(Task.check_support(Task.CLASSIFICATION, supported))
         self.assertFalse(Task.check_support(Task.REGRESSION, supported))
+
+
+if __name__ == "__main__":
+    unittest.main()

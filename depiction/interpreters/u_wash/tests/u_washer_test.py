@@ -1,3 +1,4 @@
+"""UWasher tests."""
 import unittest
 from unittest import mock
 
