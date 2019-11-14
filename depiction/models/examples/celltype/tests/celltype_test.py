@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from depiction.models.celltype.celltype import CellTyper
+from depiction.models.examples.celltype.celltype import CellTyper
 
 
 class CellTyperTestCase(unittest.TestCase):
@@ -14,7 +14,7 @@ class CellTyperTestCase(unittest.TestCase):
     def setUp(self):
         """Prepare data to predict."""
         filepath = Path(__file__).resolve(
-        ).parents[4] / 'data' / 'single-cell' / 'data.csv'
+        ).parents[5] / 'data' / 'single-cell' / 'data.csv'
         data_df = pd.read_csv(filepath)
         self.data = data_df.drop('category', axis=1).values
         self.tmp_dir = tempfile.mkdtemp()

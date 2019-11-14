@@ -3,8 +3,8 @@ from tensorflow import keras
 import tempfile
 from tensorflow.keras.utils import to_categorical
 
-from ..uri.cache.http_model import HTTPModel
-from ...core import Task, DataType
+from ...uri.cache.http_model import HTTPModel
+from ....core import Task, DataType
 
 
 def one_hot_encoding(classes):
