@@ -2,9 +2,9 @@
 """Download models wrapped in depiction."""
 import argparse
 from depiction.core import DataType
-from depiction.models.celltype import CellTyper
-from depiction.models.deepbind import DeepBind
-from depiction.models.paccmann import PaccMann
+from depiction.models.examples.celltype import CellTyper
+from depiction.models.examples.deepbind import DeepBind
+from depiction.models.examples.paccmann import PaccMann
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
