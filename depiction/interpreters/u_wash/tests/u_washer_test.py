@@ -1,12 +1,12 @@
+"""UWasher tests."""
 import unittest
-import numpy as np
 from unittest import mock
-from random import choice
-import spacy
 
-from ....core import Task, DataType
-from ....models.base.base_model import BaseModel
-from ..u_washer import UWasher
+import numpy as np
+
+from depiction.core import DataType, Task
+from depiction.interpreters.u_wash.u_washer import UWasher
+from depiction.models.base.base_model import BaseModel
 
 
 class DummyModel(BaseModel):
@@ -96,3 +96,7 @@ class UWasherTestCase(unittest.TestCase):
             mock_explain.assert_called_once()
             self.assertEqual(explanation.SHOW_IN_NOTEBOOK, False)
             self.assertEqual(explanation.PATH, dummy_path)
+
+
+if __name__ == "__main__":
+    unittest.main()

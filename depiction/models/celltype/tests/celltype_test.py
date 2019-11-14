@@ -1,11 +1,11 @@
-from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from pathlib import Path
 
 import pandas as pd
 
-from ..celltype import CellTyper
+from depiction.models.celltype.celltype import CellTyper
 
 
 class CellTyperTestCase(unittest.TestCase):
@@ -36,3 +36,7 @@ class CellTyperTestCase(unittest.TestCase):
     def tearDown(self):
         """Tear down the tests."""
         shutil.rmtree(self.tmp_dir)
+
+
+if __name__ == "__main__":
+    unittest.main()

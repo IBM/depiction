@@ -1,10 +1,11 @@
 import unittest
-from unittest import mock
 from random import choice
+from unittest import mock
 
-from ....core import Task, DataType
-from ..base_interpreter import BaseInterpreter, AnteHocInterpreter
-from ....models.base.base_model import BaseModel
+from depiction.core import DataType, Task
+from depiction.interpreters.base.base_interpreter import (AnteHocInterpreter,
+                                                          BaseInterpreter)
+from depiction.models.base.base_model import BaseModel
 
 
 class ConcreteBaseInterpreter(BaseInterpreter):
@@ -127,3 +128,7 @@ class AnteHocInterpreterTestCase(unittest.TestCase):
         with mock.patch.object(interpreter, '_fit_posthoc') as mock_fit:
             interpreter.fit(0, 0)
             mock_fit.assert_called_with(0, 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

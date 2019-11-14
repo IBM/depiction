@@ -2,7 +2,8 @@
 import os
 import unittest
 
-from ..toxic_comment_classifier import ToxicCommentClassifier
+from depiction.models.max.toxic_comment_classifier import \
+    ToxicCommentClassifier
 
 
 class ToxicCommentClassifierTestCase(unittest.TestCase):
@@ -19,3 +20,7 @@ class ToxicCommentClassifierTestCase(unittest.TestCase):
         self.assertEqual(
             toxic.predict(texts).shape, (len(texts), len(toxic.labels))
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

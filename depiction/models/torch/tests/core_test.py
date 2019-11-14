@@ -1,10 +1,11 @@
 """Test TorchModel."""
 import unittest
+
 import numpy as np
 import torchvision.models as models
 
-from ....core import Task, DataType
-from ..core import TorchModel
+from depiction.core import DataType, Task
+from depiction.models.torch.core import TorchModel
 
 
 class TorchModelTestCase(unittest.TestCase):
@@ -17,4 +18,11 @@ class TorchModelTestCase(unittest.TestCase):
             data_type=DataType.IMAGE
         )
         image = np.random.randn(1, 3, 224, 224)
-        self.assertEqual(model.predict(image).shape, (1, 1000))
+        self.assertEqual(
+            model.predict(image).shape,
+            (1, 1000)
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,13 +1,15 @@
 import unittest
 from random import choice
 from unittest import mock
-from pandas import DataFrame
-from aix360.algorithms.rbm import FeatureBinarizer, BRCGExplainer, BooleanRuleCG
-from aix360.algorithms.rbm import GLRMExplainer, LogisticRuleRegression, LinearRuleRegression
 
-from ....models.base.base_model import BaseModel
-from ....core import Task, DataType
-from ..rule_based_model import RuleAIX360
+from aix360.algorithms.rbm import (BooleanRuleCG, BRCGExplainer, GLRMExplainer,
+                                   LinearRuleRegression,
+                                   LogisticRuleRegression)
+from pandas import DataFrame
+
+from depiction.core import DataType, Task
+from depiction.interpreters.aix360.rule_based_model import RuleAIX360
+from depiction.models.base.base_model import BaseModel
 
 
 class DummyModel(BaseModel):
@@ -229,3 +231,7 @@ class RuleAIX360TestCase(unittest.TestCase):
             interpreter.predict(0)
             mock_predict.assert_called_once()
             mock_predict.assert_called_with(0)
+
+
+if __name__ == "__main__":
+    unittest.main()

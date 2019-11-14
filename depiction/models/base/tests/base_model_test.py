@@ -1,9 +1,9 @@
 import unittest
-from unittest import mock
 from random import choice
+from unittest import mock
 
-from ..base_model import BaseModel
-from ....core import Task, DataType
+from depiction.core import DataType, Task
+from depiction.models.base.base_model import BaseModel
 
 
 class ConcreteTestModel(BaseModel):
@@ -53,3 +53,7 @@ class BaseModelTestCase(unittest.TestCase):
                 pass
             for s in test_samples:
                 mock_predict.assert_any_call(s, **test_kwarg)
+
+
+if __name__ == "__main__":
+    unittest.main()

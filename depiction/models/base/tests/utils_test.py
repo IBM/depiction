@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from ..utils import get_model_file, MODELS_SUBDIR
+from depiction.models.base.utils import MODELS_SUBDIR, get_model_file
 
 
 class BaseUtilsTestCase(unittest.TestCase):
@@ -19,3 +19,7 @@ class BaseUtilsTestCase(unittest.TestCase):
             mock_get_file.assert_called_with(
                 fname, origin, cache_subdir=MODELS_SUBDIR, cache_dir=cache_dir
             )
+
+
+if __name__ == "__main__":
+    unittest.main()

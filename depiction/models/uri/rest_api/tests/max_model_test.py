@@ -3,8 +3,8 @@ import os
 import unittest
 from random import choice
 
-from .....core import Task, DataType
-from ..max_model import MAXModel
+from depiction.core import Task, DataType
+from depiction.models.uri.rest_api.max_model import MAXModel
 
 
 class ConcreteTestModel(MAXModel):
@@ -37,3 +37,7 @@ class MAXModelTestCase(unittest.TestCase):
         self.assertEqual(model.metadata_endpoint, 'model/metadata')
         self.assertEqual(model.labels_endpoint, 'model/labels')
         self.assertEqual(model.endpoint, 'model/predict')
+
+
+if __name__ == "__main__":
+    unittest.main()
