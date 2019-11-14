@@ -1,9 +1,18 @@
 """Core module for keras applications."""
-
 from .core import KerasModel
 
 
-def id(sample, *args, **kwargs):
+def identity(sample, *args, **kwargs):
+    """
+    Apply identity.
+
+    Args:
+        sample (np.ndarray): an input sample for the model.
+
+    Returns:
+        np.ndarray: output of preprocessing function representing
+            the sample.
+    """
     return sample
 
 
@@ -15,7 +24,7 @@ class KerasApplicationModel(KerasModel):
         model,
         task,
         data_type,
-        preprocessing_function=id,
+        preprocessing_function=identity,
         *args,
         **kwargs
     ):
@@ -41,7 +50,7 @@ class KerasApplicationModel(KerasModel):
         Prepare sample for the model.
 
         Args:
-            sample (np.array): an input sample for the model.
+            sample (np.ndarray): an input sample for the model.
 
         Returns:
             output of preprocessing function representing the sample.

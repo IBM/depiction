@@ -30,10 +30,10 @@ class KerasModel(BaseModel):
         Prepare sample for the model.
 
         Args:
-            sample (np.array): an input sample for the model.
+            sample (np.ndarray): an input sample for the model.
 
         Returns:
-            np.array: a numpy array representing the prepared sample.
+            np.ndarray: a numpy array representing the prepared sample.
         """
         return sample
 
@@ -43,12 +43,12 @@ class KerasModel(BaseModel):
         parameters.
 
         Args:
-            sample (np.array): an input sample for the model.
+            sample (np.ndarray): an input sample for the model.
             args (list): list of arguments for prediction.
             kwargs (dict): list of key-value arguments for prediction.
 
         Returns:
-            np.array: a prediction for the model on the given sample.
+            np.ndarray: a prediction for the model on the given sample.
         """
         predict_kwargs = copy.deepcopy(self._predict_kwargs)
         predict_kwargs.update(**kwargs)
