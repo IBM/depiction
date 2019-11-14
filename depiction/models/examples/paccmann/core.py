@@ -9,8 +9,8 @@ from copy import deepcopy
 from paccmann.models import paccmann_model_fn, MODEL_SPECIFICATION_FACTORY
 
 from .smiles import process_smiles, get_smiles_language
-from ...core import Task, DataType
-from ..uri.cache.http_model import HTTPModel
+from ....core import Task, DataType
+from ...uri.cache.http_model import HTTPModel
 
 MODEL_PARAMS_JSON = 'model_params.json'
 MODEL_CHECKPOINT = 'model.ckpt-375000'
