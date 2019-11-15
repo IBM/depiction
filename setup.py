@@ -21,9 +21,11 @@ setup(
     version='0.0.1',
     description='DEPICTION, a package for deep learning interpretability.',
     long_description=LONG_DESCRIPTION,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     author='Matteo Manica, An-phi Nguyen, Joris Cadow',
-    author_email='drugilsberg@gmail.com, nguyen.phineas@gmail.com, joriscadow@gmail.com',
+    author_email=(
+        'drugilsberg@gmail.com, nguyen.phineas@gmail.com, joriscadow@gmail.com'
+    ),
     url='https://github.com/IBM/dl-interpretability-compbio',
     license='Apache License 2.0',
     install_requires=REQUIREMENTS,
