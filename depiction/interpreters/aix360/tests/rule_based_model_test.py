@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from random import choice
 from unittest import mock
 
@@ -21,19 +22,25 @@ class DummyModel(BaseModel):
 
 class RuleAIX360TestCase(unittest.TestCase):
 
+    def setUp(self):
+        self.X = np.random.randn(100, 10)
+        self.y = (np.random.randn(100,) > 0.).astype(int)
+
     def _build_posthoc_interpreter(self):
         model = DummyModel(
             choice(list(RuleAIX360.SUPPORTED_TASK)),
             choice(list(RuleAIX360.SUPPORTED_DATATYPE))
         )
         interpreter = RuleAIX360(
-            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), model=model
+            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)),
+            X=self.X, model=model
         )
         return interpreter
 
     def _build_antehoc_interpreter(self):
         interpreter = RuleAIX360(
-            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS))
+            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)),
+            self.X, y=self.y
         )
         return interpreter
 
@@ -53,22 +60,23 @@ class RuleAIX360TestCase(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             RuleAIX360(
-                choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), wrong_model
+                choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)),
+                X=self.X, model=wrong_model
             )
 
         # test error for not supported interpreter
         with self.assertRaises(ValueError):
-            RuleAIX360('')
+            RuleAIX360('', X=self.X, y=self.y)
 
         # test error for not supported GLRM regressor
         with self.assertRaises(ValueError):
-            RuleAIX360('glrm_bubu')
+            RuleAIX360('glrm_bubu', X=self.X, y=self.y)
 
         # test correctly chosen glrm and regressor
         valid_glrm = [
             i for i in RuleAIX360.AVAILABLE_INTERPRETERS if 'glrm' in i
         ]
-        interpreter = RuleAIX360(choice(valid_glrm))
+        interpreter = RuleAIX360(choice(valid_glrm), X=self.X, y=self.y)
         self.assertTrue(isinstance(interpreter.explainer, GLRMExplainer))
         self.assertTrue(
             isinstance(interpreter.regressor, LogisticRuleRegression)
@@ -84,7 +92,7 @@ class RuleAIX360TestCase(unittest.TestCase):
         self.assertTrue(interpreter.data_type in RuleAIX360.SUPPORTED_DATATYPE)
 
         # test brcg model
-        interpreter = RuleAIX360('brcg')
+        interpreter = RuleAIX360('brcg', X=self.X, y=self.y)
         self.assertTrue(isinstance(interpreter.explainer, BRCGExplainer))
         self.assertTrue(isinstance(interpreter.regressor, BooleanRuleCG))
         self.assertFalse(interpreter._fitted)
@@ -172,9 +180,6 @@ class RuleAIX360TestCase(unittest.TestCase):
             with mock.patch.object(
                 interpreter, '_visualize_explanation'
             ) as mock_visualize:
-                with self.assertRaises(RuntimeError):
-                    e = interpreter.interpret()
-                interpreter._fitted = True
                 e = interpreter.interpret()
 
                 mock_explain.assert_called_once()
