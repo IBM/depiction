@@ -3,7 +3,7 @@ import os
 import unittest
 
 import numpy as np
-import keras
+from tensorflow import keras
 
 from depiction.core import DataType, Task
 from depiction.models.keras.application import KerasApplicationModel

@@ -2,9 +2,10 @@ import unittest
 from random import choice
 from unittest import mock
 
-from aix360.algorithms.rbm import (BooleanRuleCG, BRCGExplainer, GLRMExplainer,
-                                   LinearRuleRegression,
-                                   LogisticRuleRegression)
+from aix360.algorithms.rbm import (
+    BooleanRuleCG, BRCGExplainer, GLRMExplainer, LinearRuleRegression,
+    LogisticRuleRegression
+)
 from pandas import DataFrame
 
 from depiction.core import DataType, Task

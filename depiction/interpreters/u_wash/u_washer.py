@@ -55,8 +55,7 @@ def show_image_in_notebook_for_anchor(explanation, image, model, labels=None):
     axes[0].set_title('Original image')
     axes[1].imshow(
         np.expand_dims(
-            vectorized_feature_to_alpha(explanation[0])*.75 + .25,
-            axis=-1
+            vectorized_feature_to_alpha(explanation[0]) * .75 + .25, axis=-1
         ) * image
     )
     axes[1].set_title('Image with exaplanations')
@@ -149,8 +148,7 @@ class UWasher(BaseInterpreter):
         if path is None:
             if self.model.data_type == DataType.IMAGE:
                 NOTEBOOK_IMAGE_RENDERERS[self.interpreter](
-                    explanation, sample,
-                    self.model, self.labels
+                    explanation, sample, self.model, self.labels
                 )
             else:
                 explanation.show_in_notebook()

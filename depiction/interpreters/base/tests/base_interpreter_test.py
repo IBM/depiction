@@ -3,8 +3,9 @@ from random import choice
 from unittest import mock
 
 from depiction.core import DataType, Task
-from depiction.interpreters.base.base_interpreter import (AnteHocInterpreter,
-                                                          BaseInterpreter)
+from depiction.interpreters.base.base_interpreter import (
+    AnteHocInterpreter, BaseInterpreter
+)
 from depiction.models.base.base_model import BaseModel
 
 
