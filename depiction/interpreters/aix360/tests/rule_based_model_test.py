@@ -17,14 +17,17 @@ from depiction.models.base.base_model import BaseModel
 class DummyModel(BaseModel):
 
     def predict(self, sample):
-        return sample
+        return np.array([
+            choice([0, 1])
+            for _ in range(sample.shape[0])
+        ])
 
 
 class RuleAIX360TestCase(unittest.TestCase):
 
     def setUp(self):
         self.X = np.random.randn(100, 10)
-        self.y = (np.random.randn(100,) > 0.).astype(int)
+        self.y = (np.random.randn(100) > 0.).astype(int)
 
     def _build_posthoc_interpreter(self):
         model = DummyModel(
