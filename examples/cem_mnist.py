@@ -32,7 +32,6 @@ from depiction.models.uri.cache.http_model import HTTPModel
 from depiction.core import Task, DataType
 from depiction.interpreters.alibi.contrastive.cem import CEM
 
-
 # %% [markdown]
 # ## Load MNIST data
 
@@ -49,6 +48,7 @@ plt.gray()
 
 
 class MNISTClassifier(HTTPModel):
+
     def __init__(
         self,
         filename='mninst_cnn.h5',
@@ -77,11 +77,14 @@ cnn.model.summary()
 # CEM accepts an optional keras autoencoder to find better a pertinent
 # negative/positive
 
-ae = keras.models.load_model(get_model_file(
-    filename='mninst_ae.h5',
-    origin='https://ibm.box.com/shared/static/psogbwnx1cz0s8w6z2fdswj25yd7icpi.h5',  # noqa
-    cache_dir=cnn.cache_dir
-))
+ae = keras.models.load_model(
+    get_model_file(
+        filename='mninst_ae.h5',
+        origin=
+        'https://ibm.box.com/shared/static/psogbwnx1cz0s8w6z2fdswj25yd7icpi.h5',  # noqa
+        cache_dir=cnn.cache_dir
+    )
+)
 
 ae.summary()
 
@@ -113,16 +116,17 @@ def show_image(x):
 # Compare original with decoded images
 
 # %%
-score = cnn.model.evaluate(transform(x_test), to_categorical(y_test), verbose=0)
+score = cnn.model.evaluate(
+    transform(x_test), to_categorical(y_test), verbose=0
+)
 print('Test accuracy: ', score[1])
-
 
 # %% ------------------------------------------
 
 decoded_imgs = ae.predict(transform(x_test))
 n = 5
 plt.figure(figsize=(20, 4))
-for i in range(1, n+1):
+for i in range(1, n + 1):
     # display original
     ax = plt.subplot(2, n, i)
     # show_image(transform(x_test[i]))
@@ -145,7 +149,6 @@ for i in range(1, n+1):
 idx = 15
 X = transform_sample(x_test[idx])
 
-
 # %%
 # show_image(X)
 
@@ -160,35 +163,48 @@ cnn.predict(X).argmax(), cnn.predict(X).max()
 
 # %%
 mode = 'PN'  # 'PN' (pertinent negative) or 'PP' (pertinent positive)
-shape = X.shape # instance shape, batchsize must be 1
+shape = X.shape  # instance shape, batchsize must be 1
 assert shape[0] == 1
 kappa = 0.  # minimum difference needed between the prediction probability for the perturbed instance on the
-            # class predicted by the original instance and the max probability on the other classes 
-            # in order for the first loss term to be minimized
+# class predicted by the original instance and the max probability on the other classes
+# in order for the first loss term to be minimized
 beta = .1  # weight of the L1 loss term
 gamma = 100  # weight of the optional auto-encoder loss term
-c_init = 1.  # initial weight c of the loss term encouraging to predict a different class (PN) or 
-              # the same class (PP) for the perturbed instance compared to the original instance to be explained
+c_init = 1.  # initial weight c of the loss term encouraging to predict a different class (PN) or
+# the same class (PP) for the perturbed instance compared to the original instance to be explained
 c_steps = 10  # nb of updates for c
 max_iterations = 1000  # nb of iterations per value of c
-feature_range = (x_train.min(), x_train.max())  # feature range for the perturbed instance
+feature_range = (
+    x_train.min(), x_train.max()
+)  # feature range for the perturbed instance
 clip = (-1000., 1000.)  # gradient clipping
 lr = 1e-2  # initial learning rate
-no_info_val = -1. # a value, float or feature-wise, which can be seen as containing no info to make a prediction
-                  # perturbations towards this value means removing features, and away means adding features
-                  # for our MNIST images, the background (-0.5) is the least informative, 
-                  # so positive/negative perturbations imply adding/removing features
+no_info_val = -1.  # a value, float or feature-wise, which can be seen as containing no info to make a prediction
+# perturbations towards this value means removing features, and away means adding features
+# for our MNIST images, the background (-0.5) is the least informative,
+# so positive/negative perturbations imply adding/removing features
 
 # %% [markdown]
 # Generate pertinent negative:
 
 # %%
 # initialize CEM explainer and explain instance
-cem = CEM(cnn, mode, shape, kappa=kappa, beta=beta, feature_range=feature_range,
-          gamma=gamma,
-          ae_model=ae,
-          max_iterations=max_iterations,
-          c_init=c_init, c_steps=c_steps, learning_rate_init=lr, clip=clip, no_info_val=no_info_val)
+cem = CEM(
+    cnn,
+    mode,
+    shape,
+    kappa=kappa,
+    beta=beta,
+    feature_range=feature_range,
+    gamma=gamma,
+    ae_model=ae,
+    max_iterations=max_iterations,
+    c_init=c_init,
+    c_steps=c_steps,
+    learning_rate_init=lr,
+    clip=clip,
+    no_info_val=no_info_val
+)
 
 explanation = cem.interpret(X, verbose=True)
 
@@ -205,12 +221,24 @@ print('Pertinent negative prediction: {}'.format(explanation[mode + '_pred']))
 # %%
 mode = 'PP'
 
-
 # %%
 # initialize CEM explainer and explain instance
-cem = CEM(cnn, mode, shape, kappa=kappa, beta=beta, feature_range=feature_range,
-          gamma=gamma, ae_model=ae, max_iterations=max_iterations,
-          c_init=c_init, c_steps=c_steps, learning_rate_init=lr, clip=clip, no_info_val=no_info_val)
+cem = CEM(
+    cnn,
+    mode,
+    shape,
+    kappa=kappa,
+    beta=beta,
+    feature_range=feature_range,
+    gamma=gamma,
+    ae_model=ae,
+    max_iterations=max_iterations,
+    c_init=c_init,
+    c_steps=c_steps,
+    learning_rate_init=lr,
+    clip=clip,
+    no_info_val=no_info_val
+)
 
 explanation = cem.interpret(X, verbose=True)
 
