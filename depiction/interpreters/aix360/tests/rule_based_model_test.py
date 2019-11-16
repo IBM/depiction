@@ -17,10 +17,7 @@ from depiction.models.base.base_model import BaseModel
 class DummyModel(BaseModel):
 
     def predict(self, sample):
-        return np.array([
-            choice([0, 1])
-            for _ in range(sample.shape[0])
-        ])
+        return np.array([choice([0, 1]) for _ in range(sample.shape[0])])
 
 
 class RuleAIX360TestCase(unittest.TestCase):
@@ -36,14 +33,14 @@ class RuleAIX360TestCase(unittest.TestCase):
         )
         interpreter = RuleAIX360(
             choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)),
-            X=self.X, model=model
+            X=self.X,
+            model=model
         )
         return interpreter
 
     def _build_antehoc_interpreter(self):
         interpreter = RuleAIX360(
-            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)),
-            self.X, y=self.y
+            choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)), self.X, y=self.y
         )
         return interpreter
 
@@ -64,7 +61,8 @@ class RuleAIX360TestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             RuleAIX360(
                 choice(list(RuleAIX360.AVAILABLE_INTERPRETERS)),
-                X=self.X, model=wrong_model
+                X=self.X,
+                model=wrong_model
             )
 
         # test error for not supported interpreter

@@ -12,9 +12,6 @@ class ConcreteTestModel(MAXModel):
     def __init__(self, uri, task_type, data_type):
         super(ConcreteTestModel, self).__init__(uri, task_type, data_type)
 
-    def predict(self, sample, *, test_kwarg):
-        return sample
-
     def _process_prediction(self, prediction):
         return prediction
 

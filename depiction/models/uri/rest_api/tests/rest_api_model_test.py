@@ -13,7 +13,10 @@ class ConcreteTestModel(RESTAPIModel):
         super(ConcreteTestModel,
               self).__init__(endpoint, uri, task_type, data_type)
 
-    def predict(self, sample, *, test_kwarg):
+    def _process_prediction(self, prediction):
+        return prediction
+
+    def _predict(self, sample, *args, **kwargs):
         return sample
 
 
