@@ -1,6 +1,7 @@
 """Abstract interface for REST API models."""
 import os
 import requests
+from abc import abstractmethod
 
 from ..uri_model import URIModel
 
@@ -43,3 +44,47 @@ class RESTAPIModel(URIModel):
         )
         response.raise_for_status()
         return response.json()
+
+    @abstractmethod
+    def _process_prediction(self, prediction):
+        """
+        Process json prediction response.
+
+        Args:
+            prediction (dict): json prediction response.
+
+        Returns:
+            np.ndarray: numpy array representing the prediction.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def _predict(self, sample, *args, **kwargs):
+        """
+        Run the model for inference on a given sample and with the provided
+        parameters.
+
+        Args:
+            sample (object): an input sample for the model.
+            args (list): list of arguments.
+            kwargs (dict): list of key-value arguments.
+
+        Returns:
+            a prediction for the model on the given sample.
+        """
+        raise NotImplementedError
+
+    def predict(self, sample, *args, **kwargs):
+        """
+        Run the model for inference on a given sample and with the provided
+        parameters.
+
+        Args:
+            sample (object): an input sample for the model.
+            args (list): list of arguments.
+            kwargs (dict): list of key-value arguments.
+
+        Returns:
+            a prediction for the model on the given sample.
+        """
+        return self._process_prediction(self._predict(sample, *args, **kwargs))
