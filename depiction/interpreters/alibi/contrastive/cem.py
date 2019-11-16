@@ -68,8 +68,9 @@ class CEM(BaseInterpreter):
                 feature-wise ranges. Defaults to (-1e10, 1e10).
             gamma (float, optional): Regularization constant for optional
                 auto-encoder loss term. Defaults to 0..
-            ae_model (BaseModel, optional): Auto-encoder model used for loss
-                regularization. Defaults to None.
+            ae_model (tf.keras.Model, 'keras.Model', optional): Auto-encoder
+                model used for loss regularization. Only keras is supported.
+                Defaults to None.
             learning_rate_init (float, optional): Initial learning rate of
                 optimizer. Defaults to 1e-2.
             max_iterations (int, optional): Maximum number of iterations for
@@ -104,7 +105,7 @@ class CEM(BaseInterpreter):
 
         self.explainer = CEMImplementation(
             model.predict, mode, shape, kappa, beta, feature_range, gamma,
-            ae_model.predict if ae_model is not None else ae_model,
+            ae_model,
             learning_rate_init, max_iterations, c_init, c_steps, eps, clip,
             update_num_grad, no_info_val, write_dir, sess
         )
