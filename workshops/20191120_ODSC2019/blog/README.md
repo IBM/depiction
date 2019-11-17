@@ -30,25 +30,29 @@ Below an example of how depiction can be used to analyze a pretrained model.
 ### A simple example
 
 Let's assume to have a fancy model for classification of tabular data pretrained in Keras and avaialble at a public url.
-Explaining its predictions with `depiction` is easy as implementing a lightweight wrapper of `depiction.model.core.Model` where its `predict` method is overloaded.
+Explaining its predictions with `depiction` is easy as implementing a lightweight wrapper of `depiction.models.uri.HTTPModel` where its `predict` method is overloaded.
 
 ```python
-from depiction.core import Task
-from depiction.models.core import Model
+from depiction.core import Task, DataType
+from depiction.models.uri import HTTPModel
 
 
-class FancyModel(Model):
+class FancyModel(HTTPModel):
     """A fancy classifier."""
 
 
     def __init__(self,
         filename='fancy_model.h5',
         origin='https://url/to/my/fancy_model.h5',
+        cache_dir='/path/to/cache/models',
         *args, **kwargs):
         """Initalize the FancyModel."""
         super().__init__(
-            Task.CLASSIFICATION, filename, origin,
-            *args, **kwargs
+            uri=origin,
+            task=Task.CLASSIFICATION,
+            data_type=DataType.TABULAR,
+            cache_dir=cache_dir,
+            filename=filename
         )
         self.model = keras.models.load_model(self.model_path)
 
@@ -76,9 +80,10 @@ Once `FancyModel` is implemented, using any of the `depiction.interpreters` avai
 
 ```python
 fancy_model = FancyModel()
-# NOTE: interpreters are implemented inheriting from depiction.interpreters.core.Interpreter
+# NOTE: interpreters are implemented inheriting from
+# depiction.interpreters.base.base_interpreter.BaseInterpreter
 # and they share a common interface.
-explanations = interpreter.interpret(fancy_model.predict, example)
+explanations = interpreter.interpret(example)
 ```
 
 The explanations generated depend on the specific interpreter used.
@@ -86,13 +91,13 @@ For example, in the case of exaplanations generated using [LIME](https://github.
 
 ```python
 # LIME example
-from depiction.interpreters.uw_model import UWModel
+from depiction.interpreters.u_wash import UWasher
 
-# NOTE: `explanation_configs`: minimal settings for explanation setup
 # NOTE: `interpreter_params`: minimal settings for the dataset considered
+# NOTE: `explanation_configs`: minimal settings for the dataset considered
 
-interpreter = UWModel('lime', Task.CLASSIFICATION, DataType.TABULAR, explanation_configs, **interpreter_params)
-interpreter.interpret(fancy_model.predict, example)
+interpreter = UWasher('lime', fancy_model, **interpreter_params)
+interpreter.interpret(example, explanation_configs=explanation_configs)
 ```
 
 and directly obtain the model-specific explanation:
@@ -100,7 +105,6 @@ and directly obtain the model-specific explanation:
 <p align="center">
   <img src="lime.png" alt="LIME example" width=700>
 </p>
-
 
 ## Want to know more?
 

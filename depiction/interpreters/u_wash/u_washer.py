@@ -102,8 +102,8 @@ class UWasher(BaseInterpreter):
         Args:
             interpreter (str): string denoting the actual model to use.
             Possible values: 'lime', 'anchors'.
-            model (base model): task type
-            explanation_configs (dict): parameters for the explanation
+            model (base model): task type.
+            explanation_configs (dict): parameters for the explanation.
             kwargs (dict): paramater list to pass to the constructor of the
                 explainers. Please, refer to the official implementations of
                 LIME and anchors to understand this parameters.
