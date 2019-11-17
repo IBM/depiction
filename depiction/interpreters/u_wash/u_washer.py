@@ -17,16 +17,26 @@ from anchor.anchor_tabular import AnchorTabularExplainer
 from anchor.anchor_image import AnchorImage
 from matplotlib import pyplot as plt
 from collections import defaultdict
+from skimage.color import gray2rgb
 
 from ..base.base_interpreter import BaseInterpreter
 from ...core import Task, DataType
 
 
-def show_image_in_notebook_for_lime(explanation, image, model, labels=None):
+def show_image_in_notebook_for_lime(explanation, image, callback, labels=None):
+    """
+    Show in notebook for LIME images.
+
+    Args:
+        explanation (object): LIME explanation.
+        image (np.ndarray): array representing the image.
+        callback (function): model callback function.
+        labels (list, optional): label names. Defaults to None.
+    """
     image = np.expand_dims(image, axis=0)
     top_k = 4
-    logits = model.predict(image).squeeze()
-    label_indexes = np.argsort(model.predict(image).squeeze())[::-1][:top_k]
+    logits = callback(image).squeeze()
+    label_indexes = np.argsort(callback(image).squeeze())[::-1][:top_k]
     figure, axes = plt.subplots(2, 2, sharex=True, sharey=True)
     for axis, label_index in zip(
         [column for row in axes for column in row], label_indexes
@@ -42,7 +52,18 @@ def show_image_in_notebook_for_lime(explanation, image, model, labels=None):
         axis.set_yticks([], [])
 
 
-def show_image_in_notebook_for_anchor(explanation, image, model, labels=None):
+def show_image_in_notebook_for_anchor(
+    explanation, image, callback, labels=None
+):
+    """
+    Show in notebook for Anchors images.
+
+    Args:
+        explanation (object): Anchors explanation.
+        image (np.ndarray): array representing the image.
+        callback (function): model callback function.
+        labels (list, optional): label names. Defaults to None.
+    """
     # NOTE: get feature mask
     feature_to_alpha = defaultdict(float)
     for index, _, value, _, _ in explanation[1]:
@@ -114,7 +135,8 @@ class UWasher(BaseInterpreter):
         self.interpreter = interpreter
         Interpreter_model = self.AVAILABLE_INTERPRETERS[interpreter][
             model.data_type]
-        if self.model.data_type == DataType.IMAGE:
+        self.image_data = self.model.data_type == DataType.IMAGE
+        if self.image_data:
             self.labels = kwargs.pop('class_names', None)
         self.explainer = Interpreter_model(**kwargs)
 
@@ -142,13 +164,31 @@ class UWasher(BaseInterpreter):
         """
         if callback is None:
             callback = self.model.callback(**callback_args)
+            if self.image_data:
+                if len(sample.shape) == 4:
+                    if sample.shape[0] != 1:
+                        raise RuntimeError(
+                            'Can explain only single examples. '
+                            'Make share the batch size is 1. '
+                            f'Current shape: {sample.shape}'
+                        )
+                    else:
+                        sample = sample[0, ...]
+                if sample.shape[-1] == 1:
+                    sample = gray2rgb(sample.squeeze())
+                    # NOTE: avoid recursion errors
+                    _callback = callback
+                    del (callback)
+                    callback = lambda sample: _callback(  # noqa
+                        np.expand_dims(sample[..., -1], axis=-1)
+                    )
         explanation = self.explainer.explain_instance(
             sample, callback, **explanation_configs
         )
         if path is None:
-            if self.model.data_type == DataType.IMAGE:
+            if self.image_data:
                 NOTEBOOK_IMAGE_RENDERERS[self.interpreter](
-                    explanation, sample, self.model, self.labels
+                    explanation, sample, callback, self.labels
                 )
             else:
                 explanation.show_in_notebook()
