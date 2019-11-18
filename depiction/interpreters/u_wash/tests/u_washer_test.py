@@ -22,13 +22,16 @@ class UWasherTestCase(unittest.TestCase):
         def dummy_init(*args, **kwargs):
             return None
 
-        def test_routine(explainer_key, explainer_cls, model):
+        def dummy_fit(*args, **kwargs):
+            return None
+
+        def test_routine(explainer_key, explainer_cls, model, **kwargs):
             with mock.patch(
                 'depiction.interpreters.u_wash.u_washer.{}.__init__'.
                 format(explainer_cls),
                 side_effect=dummy_init
             ) as mock_constructor:
-                interpreter = UWasher(explainer_key, model)
+                interpreter = UWasher(explainer_key, model, **kwargs)
                 self.assertTrue(interpreter.model is model)
                 mock_constructor.assert_called_once()
 
@@ -42,7 +45,23 @@ class UWasherTestCase(unittest.TestCase):
         data_type = DataType.TABULAR
         model = DummyModel(task_type, data_type)
         test_routine('lime', 'LimeTabularExplainer', model)
-        test_routine('anchors', 'AnchorTabularExplainer', model)
+        with mock.patch(
+            'depiction.interpreters.u_wash.u_washer.AnchorTabularExplainer.fit',
+            side_effect=dummy_fit
+        ) as mock_fit:
+            test_routine('anchors', 'AnchorTabularExplainer', model, 
+                    # dummy data that will not be used (because 
+                    # of the mock) but required from constructor 
+                    train_data = [], 
+                    train_labels = [],
+                    validation_data = [],
+                    validation_labels = [])
+            mock_fit.assert_called_once()
+
+        data_type = DataType.IMAGE
+        model = DummyModel(task_type, data_type)
+        test_routine('lime', 'LimeImageExplainer', model)
+        test_routine('anchors', 'AnchorImage', model)
 
     def testInterpret(self):
         task_type = Task.CLASSIFICATION
