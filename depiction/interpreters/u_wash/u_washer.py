@@ -1,5 +1,5 @@
 """
-Concrete interface class for models developed at the University of Washington, 
+Concrete interface class for models developed at the University of Washington,
 by Marco Tullio Ribeiro and collaborators.
 
 
@@ -79,7 +79,7 @@ def show_image_in_notebook_for_anchor(
             vectorized_feature_to_alpha(explanation[0]) * .75 + .25, axis=-1
         ) * image
     )
-    axes[1].set_title('Image with exaplanations')
+    axes[1].set_title('Image with explanations')
     for axis in axes:
         axis.set_xticks([], [])
         axis.set_yticks([], [])
@@ -116,19 +116,33 @@ class UWasher(BaseInterpreter):
         for i in AVAILABLE_INTERPRETERS.values() for k in i.keys()
     }
 
-    def __init__(self, interpreter, model, **kwargs):
+    def __init__(
+        self, interpreter, model,
+        train_data=None, train_labels=None,
+        validation_data=None, validation_labels=None,
+        discretizer='quartile', **kwargs
+    ):
         """
         Constructor.
 
         Args:
             interpreter (str): string denoting the actual model to use.
-            Possible values: 'lime', 'anchors'.
+                Possible values: 'lime', 'anchors'.
             model (base model): task type.
             explanation_configs (dict): parameters for the explanation.
             kwargs (dict): paramater list to pass to the constructor of the
                 explainers. Please, refer to the official implementations of
                 LIME and anchors to understand this parameters.
+
+        In the special case of 'anchor' and model.data_type.TABULAR,
+        additionally required arguments (for fitting discretizer) are:
+            train_data (np.ndarray)
+            train_labels (np.ndarray)
+            validation_data (np.ndarray)
+            validation_labels (np.ndarray)
+            discretizer (str, optional): 'quartile' or 'decile'
         """
+
         super(UWasher, self).__init__(model)
 
         self.model = model
@@ -139,6 +153,27 @@ class UWasher(BaseInterpreter):
         if self.image_data:
             self.labels = kwargs.pop('class_names', None)
         self.explainer = Interpreter_model(**kwargs)
+
+        if (
+            self.interpreter == 'anchors'
+            and self.model.data_type is DataType.TABULAR
+        ):
+            if (
+                train_data is None
+                or train_labels is None
+                or validation_data is None
+                or validation_labels is None
+            ):
+                raise TypeError(
+                    "In the special case of 'anchor' and "
+                    "model.data_type.TABULAR, additionally required arguments "
+                    "(for fitting discretizer) are: train_data, train_labels, "
+                    "validation_data, validation_labels"
+                )
+            self.explainer.fit(
+                train_data, train_labels,
+                validation_data, validation_labels, discretizer
+            )
 
     def interpret(
         self,
