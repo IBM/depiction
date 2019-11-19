@@ -45,7 +45,7 @@ class CellTyper(HTTPModel):
         origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',  # noqa
         cache_dir=None
     ):
-        """Initalize the CellTyper."""
+        """Initialize the CellTyper."""
         super().__init__(
             uri=origin,
             task=Task.CLASSIFICATION,

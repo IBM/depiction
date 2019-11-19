@@ -9,7 +9,7 @@ class KerasModel(BaseModel):
 
     def __init__(self, model, task, data_type):
         """
-        Initalize a Model.
+        Initialize a Model.
 
         Args:
             model (torch.nn.Module): model to wrap.

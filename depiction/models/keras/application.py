@@ -29,7 +29,7 @@ class KerasApplicationModel(KerasModel):
         **kwargs
     ):
         """
-        Initalize a KerasApplicationModel.
+        Initialize a KerasApplicationModel.
 
         Args:
             model (keras): model to wrap.

@@ -55,7 +55,7 @@ class MNISTClassifier(HTTPModel):
         origin='https://ibm.box.com/shared/static/k1x70cmr01fahob5ub7y2r82jqv3r75b.h5',  # noqa
         cache_dir=tempfile.mkdtemp()
     ):
-        """Initalize the CellTyper."""
+        """Initialize the CellTyper."""
         super().__init__(
             uri=origin,
             task=Task.CLASSIFICATION,
