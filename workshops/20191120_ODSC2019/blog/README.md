@@ -46,7 +46,7 @@ class FancyModel(HTTPModel):
         origin='https://url/to/my/fancy_model.h5',
         cache_dir='/path/to/cache/models',
         *args, **kwargs):
-        """Initalize the FancyModel."""
+        """Initialize the FancyModel."""
         super().__init__(
             uri=origin,
             task=Task.CLASSIFICATION,

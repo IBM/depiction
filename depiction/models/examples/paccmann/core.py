@@ -207,7 +207,7 @@ class PaccMann(HTTPModel):
         cache_dir=tempfile.mkdtemp()
     ):
         """
-        Initalize PaccMann.
+        Initialize PaccMann.
 
         Args:
             data_type (depiction.core.DataType): data type.
@@ -303,7 +303,7 @@ class PaccMannSmiles(PaccMann):
         cache_dir=tempfile.mkdtemp()
     ):
         """
-        Initalize the Model.
+        Initialize the Model.
 
         Args:
             cell_line (np.ndarray): an array containing cell line gene
@@ -349,7 +349,7 @@ class PaccMannCellLine(PaccMann):
         cache_dir=tempfile.mkdtemp()
     ):
         """
-        Initalize the Model.
+        Initialize the Model.
 
         Args:
             smiles (str): a SMILES representing a molecule.

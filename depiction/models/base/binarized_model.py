@@ -9,7 +9,7 @@ class BinarizedClassifier(BaseModel):
 
     def __init__(self, model, data_type, label_index):
         """
-        Initalize a Model.
+        Initialize a Model.
 
         Args:
             model (torch.nn.Module): model to wrap.

@@ -7,7 +7,7 @@ class URIModel(BaseModel):
 
     def __init__(self, uri, task, data_type):
         """
-        Initalize a URIModel.
+        Initialize a URIModel.
 
         Args:
             uri (str): URI to access the model.

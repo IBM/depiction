@@ -11,7 +11,7 @@ class RESTAPIModel(URIModel):
 
     def __init__(self, endpoint, uri, task, data_type):
         """
-        Initalize a REST API model.
+        Initialize a REST API model.
 
         Args:
             endpoint (str): endpoint for prediction.
