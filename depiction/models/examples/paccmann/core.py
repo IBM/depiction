@@ -2,7 +2,6 @@
 import os
 import json
 import zipfile
-import tempfile
 import numpy as np
 import tensorflow as tf
 from copy import deepcopy
@@ -204,7 +203,7 @@ class PaccMann(HTTPModel):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
         Initalize PaccMann.
@@ -300,7 +299,7 @@ class PaccMannSmiles(PaccMann):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
         Initalize the Model.
@@ -346,7 +345,7 @@ class PaccMannCellLine(PaccMann):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
         Initalize the Model.
