@@ -1,6 +1,5 @@
 """CellTyper model."""
 from tensorflow import keras
-import tempfile
 from tensorflow.keras.utils import to_categorical
 
 from ...uri.cache.http_model import HTTPModel
@@ -44,7 +43,7 @@ class CellTyper(HTTPModel):
         self,
         filename='celltype_model.h5',
         origin='https://ibm.box.com/shared/static/5uhttlduaund89tpti4y0ptipr2dcj0h.h5',  # noqa
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """Initialize the CellTyper."""
         super().__init__(

@@ -90,7 +90,7 @@ class DeepBind(HTTPModel):
         use_labels=True,
         filename='deepbind.tgz',
         origin='https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz',
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
         Constructor.
