@@ -14,7 +14,7 @@ class MAXModel(RESTAPIModel):
 
     def __init__(self, uri, task, data_type):
         """
-        Initalize a MAX model.
+        Initialize a MAX model.
 
         Args:
             uri (str): URI to access the model.

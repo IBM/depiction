@@ -9,7 +9,7 @@ class BaseModel(ABC):
 
     def __init__(self, task, data_type):
         """
-        Initalize a Model.
+        Initialize a Model.
 
         Args:
             task (depiction.core.Task): task type.

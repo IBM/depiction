@@ -15,7 +15,7 @@ class COSModel(CacheModel):
         self, uri, task, data_type, cache_dir, filename=None, **kwargs
     ):
         """
-        Initalize a COSModel.
+        Initialize a COSModel.
 
         Args:
             uri (str): URI to access the model.

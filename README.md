@@ -1,10 +1,10 @@
-# dl-interpretability-compbio
+# depiction
 
 [![Build Status](https://travis-ci.org/IBM/dl-interpretability-compbio.svg?branch=master)](https://travis-ci.org/IBM/dl-interpretability-compbio)
 
-A collection of tools and resources to interpret deep learning models for computational biology.
+A collection of tools and resources to interpret deep learning models in a framework-independent fashion.
 
-The core of the repo is a toolbox, called `depiction` (DEPICTION, Deep lEarning interPretabilIty CompuTatIONal biology), with wrappers around models and method for interpretable deep learning.
+The core of the repo is a package, called `depiction`, with wrappers around models and methods for interpretable deep learning.
 
 ## Docker setup
 
@@ -54,10 +54,6 @@ and stopped using the container id:
 docker stop <CONTAINER ID>
 ```
 
-### Reference material
-
-Accompanying slides for all the notebooks can be downloaded [here](https://ibm.box.com/v/idl-tutorial-slides).
-
 ## Development setup
 
 Setup a conda environment
@@ -77,5 +73,3 @@ Install the module:
 ```sh
 pip install .
 ```
-
-**NOTE**: Currently DeepBind wrappers are only supported on Linux.

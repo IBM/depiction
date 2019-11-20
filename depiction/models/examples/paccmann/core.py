@@ -2,7 +2,6 @@
 import os
 import json
 import zipfile
-import tempfile
 import numpy as np
 import tensorflow as tf
 from copy import deepcopy
@@ -204,10 +203,10 @@ class PaccMann(HTTPModel):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
-        Initalize PaccMann.
+        Initialize PaccMann.
 
         Args:
             data_type (depiction.core.DataType): data type.
@@ -300,10 +299,10 @@ class PaccMannSmiles(PaccMann):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
-        Initalize the Model.
+        Initialize the Model.
 
         Args:
             cell_line (np.ndarray): an array containing cell line gene
@@ -346,10 +345,10 @@ class PaccMannCellLine(PaccMann):
         model_checkpoint='model.ckpt-375000',
         number_of_genes=2128,
         smiles_length=155,
-        cache_dir=tempfile.mkdtemp()
+        cache_dir=None
     ):
         """
-        Initalize the Model.
+        Initialize the Model.
 
         Args:
             smiles (str): a SMILES representing a molecule.

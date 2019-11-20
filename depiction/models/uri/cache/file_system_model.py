@@ -7,7 +7,7 @@ class FileSystemModel(CacheModel):
 
     def __init__(self, uri, task, data_type):
         """
-        Initalize a FileSystemModel.
+        Initialize a FileSystemModel.
 
         Args:
             uri (str): URI to access the model.

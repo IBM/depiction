@@ -15,7 +15,7 @@ class TorchVisionModel(TorchModel):
 
     def __init__(self, model, task, data_type):
         """
-        Initalize a TorchVisionModel.
+        Initialize a TorchVisionModel.
 
         Args:
             model (torch.nn.Module): model to wrap.

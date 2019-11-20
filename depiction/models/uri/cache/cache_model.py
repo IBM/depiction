@@ -11,7 +11,7 @@ class CacheModel(URIModel):
 
     def __init__(self, uri, task, data_type, cache_dir, filename=None):
         """
-        Initalize a CacheModel.
+        Initialize a CacheModel.
 
         Args:
             uri (str): URI to access the model.

@@ -8,7 +8,7 @@ class HTTPModel(CacheModel):
 
     def __init__(self, uri, task, data_type, cache_dir, filename=None):
         """
-        Initalize a HTTPModel.
+        Initialize a HTTPModel.
 
         Args:
             uri (str): URI to access the model.
