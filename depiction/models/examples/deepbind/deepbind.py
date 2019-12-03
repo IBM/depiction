@@ -48,6 +48,17 @@ def deepbind(factor_id, sequence_fpath, exec_path):
     return process_deepbind_stdout(process.stdout)
 
 
+def character_correction(sequences_list):
+    """Some perturbation based interpretability methods (e.g. lime)
+    might introduce null characters which are not viable input.
+    Deleting them is one way of dealing with this.
+    """
+    return [
+        s.replace('\x00', '') if len(s.replace('\x00', '')) > 0
+        else np.random.choice(DNA_ALPHABET) for s in sequences_list
+    ]
+
+
 def deepbind_on_sequences(
     factor_id, sequences_list, exec_path, tmp_folder=None
 ):
@@ -55,12 +66,7 @@ def deepbind_on_sequences(
 
     with open(tmp_file, 'w') as tmp_fh:
         tmp_fh.write(
-            '\n'.join(
-                [
-                    s.replace('\x00', '') if len(s.replace('\x00', '')) > 0
-                    else np.random.choice(DNA_ALPHABET) for s in sequences_list
-                ]
-            )
+            '\n'.join(character_correction(sequences_list))
         )
 
     return deepbind(factor_id, tmp_file, exec_path)
