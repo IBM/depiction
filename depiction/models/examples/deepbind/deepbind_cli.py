@@ -1,4 +1,4 @@
-"""Wrapper for pretrained Deepbind."""
+"""Wrapper for pretrained Deepbind as executable."""
 import os
 import tarfile
 import tempfile
