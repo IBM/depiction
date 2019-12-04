@@ -42,8 +42,8 @@ class KipoiModel(BaseModel):
             data_type (depiction.core.DataType): data type.
             source (str):  kipoi model source name. Defaults to 'kipoi'.
             with_dataloader (bool): if True, the kipoi models' default
-                dataloader is loaded to `_model.default_dataloader` and the
-                pipeline at `_model.pipeline` enabled. Defaults to False.
+                dataloader is loaded to `model.default_dataloader` and the
+                pipeline at `model.pipeline` enabled. Defaults to False.
             preprocessing_function (callable): function to preprocess samples.
             **preprocessing_kwargs (dict): keyword arguments passed to
             preprocessing function.
@@ -56,10 +56,10 @@ class KipoiModel(BaseModel):
         """
         super().__init__(task=task, data_type=data_type)
         self.preprocessing_function = preprocessing_function
-        self.preprocessing_kwargs = preprocessing_kwargs
+        self.preprocessing_kwargs = copy.deepcopy(preprocessing_kwargs)
         self.postprocessing_function = postprocessing_function
-        self.postprocessing_kwargs = postprocessing_kwargs
-        self._model = kipoi.get_model(
+        self.postprocessing_kwargs = copy.deepcopy(postprocessing_kwargs)
+        self.model = kipoi.get_model(
             model, source=source, with_dataloader=with_dataloader
         )
 
@@ -76,7 +76,6 @@ class KipoiModel(BaseModel):
         return self.preprocessing_function(
             sample, **self.preprocessing_kwargs
         )
-        # TODO manage batch dimention?
 
     def predict(self, sample):
         """
@@ -90,6 +89,6 @@ class KipoiModel(BaseModel):
             np.ndarray: a prediction for the model on the given sample.
         """
         return self.postprocessing_function(
-            self._model.predict_on_batch(self._prepare_sample(sample)),
+            self.model.predict_on_batch(self._prepare_sample(sample)),
             **self.postprocessing_kwargs
         )
