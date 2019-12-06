@@ -1,6 +1,6 @@
 # depiction
 
-[![Build Status](https://travis-ci.org/IBM/dl-interpretability-compbio.svg?branch=master)](https://travis-ci.org/IBM/dl-interpretability-compbio)
+[![Build Status](https://travis-ci.com/IBM/depiction.svg?branch=master)](https://travis-ci.com/IBM/depiction)
 
 A collection of tools and resources to interpret deep learning models in a framework-independent fashion.
 
