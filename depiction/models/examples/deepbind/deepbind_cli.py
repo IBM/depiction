@@ -23,8 +23,8 @@ def sigmoid(x):
 
 def process_deepbind_stdout(deepbind_stdout):
     """
-    Process the output assuming that there is only one input and one factor, i.e.
-    the output has this format:
+    Process the output assuming that there is only one input and one factor,
+    i.e. the output has this format:
 
     <BOF>
     <FACTOR_ID>\n
@@ -95,7 +95,7 @@ class DeepBind(HTTPModel):
         tf_factor_id='D00328.003',
         use_labels=True,
         filename='deepbind.tgz',
-        origin='https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz',
+        origin='https://ibm.box.com/shared/static/ns9e7666kfjwvlmyk6mrh4n6sqjmzagm.tgz',  # noqa
         cache_dir=None
     ):
         """

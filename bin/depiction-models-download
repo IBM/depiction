@@ -22,7 +22,8 @@ if __name__ == '__main__':
     # CellTyper
     _ = CellTyper(cache_dir=args.cache_dir)
     # DeepBind
-    _ = DeepBind(cache_dir=args.cache_dir)
+    _ = DeepBind(model='DeepBind/Homo_sapiens/TF/D00328.003_SELEX_CTCF')
+    _ = DeepBind(model='DeepBind/Homo_sapiens/TF/D00761.001_ChIP-seq_FOXA1')
     # PaccMann
     # NOTE: here data_type is not relevant
     _ = PaccMann(data_type=DataType.TEXT, cache_dir=args.cache_dir)
