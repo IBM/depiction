@@ -1,5 +1,4 @@
 """Wrapper for pretrained Deepbind via Kipoi."""
-import os
 import numpy as np
 from spacy.tokens import Doc
 from spacy.vocab import Vocab
