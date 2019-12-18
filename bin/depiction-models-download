@@ -4,6 +4,7 @@ import argparse
 from depiction.core import DataType
 from depiction.models.examples.celltype import CellTyper
 from depiction.models.examples.deepbind import DeepBind
+from depiction.models.examples.deepbind.deepbind_cli import DeepBind as DB
 from depiction.models.examples.paccmann import PaccMann
 
 parser = argparse.ArgumentParser()
@@ -22,7 +23,10 @@ if __name__ == '__main__':
     # CellTyper
     _ = CellTyper(cache_dir=args.cache_dir)
     # DeepBind
-    _ = DeepBind(cache_dir=args.cache_dir)
+    _ = DeepBind(model='DeepBind/Homo_sapiens/TF/D00328.003_SELEX_CTCF')
+    _ = DeepBind(model='DeepBind/Homo_sapiens/TF/D00761.001_ChIP-seq_FOXA1')
+    # DeepBind cli version for old workshop notebook support
+    _ = DB(cache_dir=args.cache_dir)
     # PaccMann
     # NOTE: here data_type is not relevant
     _ = PaccMann(data_type=DataType.TEXT, cache_dir=args.cache_dir)

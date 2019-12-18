@@ -1,10 +1,32 @@
 services:
   - docker
+ 
+env:
+  - DOCKER_COMPOSE_VERSION=1.25.0
 
+before_install:
+  # docker
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  # docker-compose
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 script:
   - docker-compose -f docker/docker-compose.yml build
   - docker-compose -f .travis/docker-compose.yml up -d
-  - docker exec -it depiction-test python3 -m unittest discover -t /build/ -p "*_test.py" depiction
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/tests
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/interpreters/
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/base/
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/keras
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/kipoi/
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/max/
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/torch
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/uri/
+  - docker exec -it depiction-test python3 -m unittest discover -v -t /build -p "*_test.py" /build/depiction/models/examples/celltype/
 
 deploy:
   provider: script
