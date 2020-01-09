@@ -16,6 +16,9 @@ from tensorflow.keras.models import Model
 from deepexplain.tensorflow.methods import attribution_methods
 from copy import deepcopy
 import warnings
+from captum.attr import visualization as viz
+import numpy as np
+from matplotlib.colors import Normalize
 
 from ...core import DataType, Task
 from ..base.base_interpreter import BaseInterpreter
@@ -84,7 +87,9 @@ class BackPropeter(BaseInterpreter):
             raise ValueError('Model not supported! At the moment we only support {}.'
                              '\nPlease check again in the future!'.format(self.METHODS.keys()))
 
-    def interpret(self, samples, target_layer=-1, **interpret_kwargs):
+    def interpret(self, samples, target_layer=-1, show_in_notebook=False,
+                    explanation_configs={},
+                    vis_configs={}):
         """Explain instance and return PP or PN with metadata. If pyTorch (captum) is used,
         the convergence delta is NOT returned by default.
 
@@ -98,9 +103,21 @@ class BackPropeter(BaseInterpreter):
             tensor (or tuple of tensors) containing attributions
         """
         if isinstance(self._model, TorchModel):
-            if self._explainer.has_convergence_delta() and 'return_convergence_delta' not in interpret_kwargs:
-                interpret_kwargs['return_convergence_delta'] = False
-            return self._explainer.attribute(inputs=samples, **interpret_kwargs)
+            if self._explainer.has_convergence_delta() and 'return_convergence_delta' not in explanation_configs:
+                explanation_configs['return_convergence_delta'] = False
+            explanation = self._explainer.attribute(inputs=self._model._prepare_sample(samples), **explanation_configs)
+            if show_in_notebook:
+                if 'return_convergence_delta' in explanation_configs and explanation_configs['return_convergence_delta']:
+                    exp = explanation[0]
+                else:
+                    exp = explanation
+                exp = np.transpose(exp.detach().numpy()[0], (1,2,0))
+                normalizer = Normalize()
+                if 'method' not in vis_configs:
+                    vis_configs['method'] = 'masked_image'
+                viz.visualize_image_attr(exp, normalizer(samples[0]), **vis_configs)
+
+            return explanation
         else:
             with DeepExplain(session=K.get_session()) as de:
                 input_tensor = self._model._model.inputs
@@ -113,5 +130,7 @@ class BackPropeter(BaseInterpreter):
                 model = Model(inputs=input_tensor, outputs=self._model._model.outputs)
                 target_tensor = model(input_tensor)
 
+                if show_in_notebook:
+                    warnings.warn('Sorry! Visualization not implemented yet!', UserWarning)
 
-                return de.explain(self._method, T=target_tensor, X=input_tensor, xs=smpls, **interpret_kwargs)
+                return de.explain(self._method, T=target_tensor, X=input_tensor, xs=smpls, **explanation_configs)
