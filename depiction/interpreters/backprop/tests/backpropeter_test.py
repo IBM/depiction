@@ -114,8 +114,8 @@ class BackPropeterTestCase(unittest.TestCase):
             interpreter = BackPropeter(self._torch['model'], self._torch['method_name'])
             args = inspect.signature(interpreter._explainer.attribute).parameters.keys()
 
-            x = torch.randn(batch_size, INPUT_SZ)
-            output = self._torch['model']._model(x)
+            x = np.random.rand(batch_size, INPUT_SZ)
+            output = torch.tensor(self._torch['model'].predict(x))
             output = F.softmax(output, dim=1)
             prediction_score, pred_label_idx = torch.topk(output, 1, dim=1)
             pred_label_idx = pred_label_idx.squeeze()
@@ -126,14 +126,14 @@ class BackPropeterTestCase(unittest.TestCase):
                 'target': pred_label_idx,
             } 
             allowed_kwargs = interpret_kwargs.keys() & set(args)
-            res = interpreter.interpret(x, **{arg: interpret_kwargs[arg] for arg in allowed_kwargs})
+            res = interpreter.interpret(x, explanation_configs={arg: interpret_kwargs[arg] for arg in allowed_kwargs})
             self.assertIsInstance(res, torch.Tensor)
 
             # -- -- with delta
             if interpreter._explainer.has_convergence_delta():
                 interpret_kwargs['return_convergence_delta'] = True
                 allowed_kwargs = interpret_kwargs.keys() & set(args)
-                res = interpreter.interpret(x, **{arg: interpret_kwargs[arg] for arg in allowed_kwargs})
+                res = interpreter.interpret(x, explanation_configs={arg: interpret_kwargs[arg] for arg in allowed_kwargs})
                 self.assertIsInstance(res, tuple)
                 self.assertIsInstance(res[0], torch.Tensor)            
                 self.assertIsInstance(res[1], torch.Tensor)
