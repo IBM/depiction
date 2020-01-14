@@ -18,28 +18,33 @@ from anchor.anchor_image import AnchorImage
 from matplotlib import pyplot as plt
 from collections import defaultdict
 from skimage.color import gray2rgb
+from matplotlib.colors import Normalize
 
 from ..base.base_interpreter import BaseInterpreter
 from ...core import Task, DataType
 
 
-def show_image_in_notebook_for_lime(explanation, image, callback, labels=None):
+def show_image_in_notebook_for_lime(explanation, image, callback, labels=None, top_k=4, nperrow=2):
     """
     Show in notebook for LIME images.
 
     Args:
         explanation (object): LIME explanation.
         image (np.ndarray): array representing the image.
-        callback (function): model callback function.
+        callback (function): model callback function. 
         labels (list, optional): label names. Defaults to None.
+        top_k (int, optional): number of top classes to show.
+        n_row (int, optional): number of explanations to show per row.
     """
     image = np.expand_dims(image, axis=0)
-    top_k = 4
     logits = callback(image).squeeze()
     label_indexes = np.argsort(callback(image).squeeze())[::-1][:top_k]
-    figure, axes = plt.subplots(2, 2, sharex=True, sharey=True)
+    top_k = min(top_k, len(label_indexes))
+    rows = np.int(np.ceil(np.float(top_k)/nperrow))
+    figure, axes = plt.subplots(rows, nperrow, sharex=True, sharey=True)
+    axes = axes.flatten()
     for axis, label_index in zip(
-        [column for row in axes for column in row], label_indexes
+        axes, label_indexes
     ):
         image_to_explain, mask = explanation.get_image_and_mask(label_index)
         axis.imshow(image_to_explain, interpolation=None)
@@ -72,12 +77,14 @@ def show_image_in_notebook_for_anchor(
         lambda feature: feature_to_alpha[feature]
     )
     figure, axes = plt.subplots(1, 2, sharex=True, sharey=True)
-    axes[0].imshow(image)
+    normalizer = Normalize()
+    img = normalizer(image)
+    axes[0].imshow(img)
     axes[0].set_title('Original image')
     axes[1].imshow(
         np.expand_dims(
             vectorized_feature_to_alpha(explanation[0]) * .75 + .25, axis=-1
-        ) * image
+        ) * img
     )
     axes[1].set_title('Image with explanations')
     for axis in axes:
@@ -180,6 +187,7 @@ class UWasher(BaseInterpreter):
         sample,
         callback_args={},
         explanation_configs={},
+        vis_configs={},
         path=None,
         callback=None
     ):
@@ -223,7 +231,7 @@ class UWasher(BaseInterpreter):
         if path is None:
             if self.image_data:
                 NOTEBOOK_IMAGE_RENDERERS[self.interpreter](
-                    explanation, sample, callback, self.labels
+                    explanation, sample, callback, self.labels, **vis_configs
                 )
             else:
                 explanation.show_in_notebook()
