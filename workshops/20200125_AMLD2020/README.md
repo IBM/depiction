@@ -31,7 +31,7 @@ For both the _docker_ and the _conda_ setup, **we strongly suggest to setup your
 - [Dr. Matteo Manica](https://researcher.watson.ibm.com/researcher/view.php?person=zurich-TTE), IBM Research Zürich
 - [An-Phi Nguyen](https://researcher.watson.ibm.com/researcher/view.php?person=zurich-UYE), IBM Research Zürich
 
-## (Tentative) Schedule
+## Schedule
 
 | Time        | Title                                | Speaker                  |
 |-------------|--------------------------------------|--------------------------|
