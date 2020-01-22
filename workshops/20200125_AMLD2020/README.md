@@ -1,4 +1,4 @@
-# Tutorial on interpretability in machine learning for Computational Biology
+# Interpretability in machine learning for Computational Biology
 
 ## Requirements
 
@@ -30,3 +30,7 @@ For both the _docker_ and the _conda_ setup, **we strongly suggest to setup your
 | 10:30-11:15 | (Exercise 2) Breast cancer image classification.  | An-phi Nguyen           |
 | 11:15-11:45 | (Exercise 3) Understanding transcription factors binding. | An-phi Nguyen          |
 | 11:45-12:30 | (Exercise 4) PaccMann: what to do for multimodal data. | Matteo Manica           |
+
+## Slides
+
+The slides can be found on Box: https://ibm.box.com/v/amld-2020-depiction
