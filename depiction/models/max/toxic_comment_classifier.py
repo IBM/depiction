@@ -35,8 +35,8 @@ class ToxicCommentClassifier(MAXModel):
         """
         return np.array(
             [
-                [a_prediction[label] for label in self.labels]
-                for a_prediction in prediction['predictions']
+                [result['predictions'][label] for label in self.labels]
+                for result in prediction['results'] # API changed with new level nesting
             ]
         )
 

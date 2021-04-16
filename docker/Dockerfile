@@ -10,7 +10,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 # install rdkit
 RUN conda config --add channels  https://conda.anaconda.org/rdkit
-RUN conda install -y rdkit==2019.03.1
+RUN conda install -y rdkit==2019.03.1 python=3.7
 # install pip dependencies
 WORKDIR /build
 COPY requirements.txt /build/
