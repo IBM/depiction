@@ -33,6 +33,7 @@ class ToxicCommentClassifier(MAXModel):
         Returns:
             np.ndarray: numpy array representing the prediction.
         """
+        prediction = prediction['results'] # API changed with new level nesting
         return np.array(
             [
                 [a_prediction[label] for label in self.labels]
