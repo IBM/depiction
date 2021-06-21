@@ -12,19 +12,50 @@ from matplotlib.colors import rgb2hex
 class FeatureAttributionExplanation(BaseExplanation):
 
     def __init__(self, feat_attr: np.ndarray, data_type: DataType):
+        """
+        Constructor
+
+        Args:
+            feat_attr: np.array containing the attributions
+            data_type: data type of the explained model
+        """
         super(FeatureAttributionExplanation, self).__init__()
         self.attributions = feat_attr
         self.data_type = data_type
 
-    def normalize(self, vmin=None, vmax=None):
+
+    def normalize(self, vmin=None, vmax=None, clip=False):
+        """
+        Normalize the attributions to the range [0, 1] given a min and a max value.
+
+        Args:
+            vmin: min value to use for normalization
+            vmax: max value to use for normalization
+            clip: if True, clip attributions before normalization
+        """
         if vmin is None:
             vmin = np.min(self.attributions)
         if vmax is None:
             vmax = np.max(self.attributions)
+        if clip:
+            self.attributions = np.clip(self.attributions, a_min=vmin, a_max=vmax)
         self.attributions = (self.attributions - vmin)/(vmin-vmax)
 
     def _visualize_tabular(self, *, feature_names=None, fig_axes: tuple = None, plot_mode: str='heatmap',
                            show=False, **kwargs):
+        """
+        Routine to visualize feature attributions for tabular data
+
+        Args:
+            feature_names: iterable containing the names of the features. Default: None.
+            fig_axes: tuple containing plt.Figure and plt.Axis instances where to plot the attributions
+            plot_mode: string specifying how to plot the attributions. Available modes: 'barplot', 'heatmap'
+            show: if True, plot the generated figure.
+            kwargs: additional arguments to pass to the plotting functions. refer to seaborn for more details.
+        Returns:
+            fig: plt.Figure
+            ax: plt.Axis
+        """
         PLOT_MODES = {'barplot', 'heatmap'}
         if plot_mode not in PLOT_MODES:
             raise RuntimeError('Mode "{}" not valid. Valid modes are: {}'.format(plot_mode, PLOT_MODES))
@@ -55,6 +86,18 @@ class FeatureAttributionExplanation(BaseExplanation):
         return fig, ax
 
     def _visualize_image(self, *, image: np.ndarray=None, fig_axes: tuple = None, show=False, **kwargs):
+        """
+        Routine to visualize feature attributions for tabular data
+
+        Args:
+            image: reference image to plot alongside the attributions
+            fig_axes: tuple containing plt.Figure and plt.Axis instances where to plot the attributions
+            show: if True, plot the generated figure.
+            kwargs: additional arguments to pass to the plt.imshow
+        Returns:
+            fig: plt.Figure
+            ax: plt.Axis
+        """
         image = deepcopy(image)
         # check dim consistency
         if self.attributions.shape != image.shape:
@@ -94,6 +137,22 @@ class FeatureAttributionExplanation(BaseExplanation):
         return fig, ax
 
     def _visualize_text(self, *, tokens, delimiter=' ', fig_axes: tuple = None, n_colors = 20, show=False, hl_chars=('<', '>'), **kwargs):
+        """
+        Routine to visualize feature attributions for tabular data
+
+        Args:
+            tokens: tokenized string for which the attributions should be visualized.
+            delimiter: delimiter to use to recompose the string. Default: ' '.
+            fig_axes: tuple containing plt.Figure and plt.Axis instances where to plot the attributions
+            n_colors: number of bins to use to discretize the attributions for visualization
+            show: if True, plot the generated figure.
+            hl_chars: tuple containing the delimiters for highlighting the text according the attributions. Please refer to the
+                        highlight_text documentation for further details. NOTE: characters not included in the vocabulary should
+                        be used.
+        Returns:
+            fig: plt.Figure
+            ax: plt.Axis
+        """
         if len(tokens) != self.attributions.shape[-1]:
             raise UserWarning('The number of tokens and attributions must correspond!')
 
@@ -125,7 +184,21 @@ class FeatureAttributionExplanation(BaseExplanation):
         return fig, ax
 
 
+    def visualize_help(self):
+        if self.data_type == DataType.TABULAR:
+            print(self._visualize_tabular.__doc__)
+        elif self.data_type == DataType.IMAGE:
+            print(self._visualize_image.__doc__)
+        elif self.data_type == DataType.TEXT:
+            print(self._visualize_text.__doc__)
+        else:
+            raise RuntimeError('There might have been an error in setting the data type!')
+
+
     def visualize(self, *args, **kwargs):
+        """
+        Interface method for plotting
+        """
         if self.data_type == DataType.TABULAR:
             fig, ax = self._visualize_tabular(*args, **kwargs)
         elif self.data_type == DataType.IMAGE:
