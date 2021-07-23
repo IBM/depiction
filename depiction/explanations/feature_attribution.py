@@ -7,6 +7,8 @@ from copy import deepcopy
 from highlight_text import HighlightText
 from matplotlib import cm
 from matplotlib.colors import rgb2hex
+import logomaker
+import pandas as pd
 
 
 class FeatureAttributionExplanation(BaseExplanation):
@@ -22,7 +24,11 @@ class FeatureAttributionExplanation(BaseExplanation):
         super(FeatureAttributionExplanation, self).__init__()
         self.attributions = feat_attr
         self.data_type = data_type
+        self._unnormalized = deepcopy(self.attributions)
 
+    def make_positive(self):
+        self.attributions = np.abs(self.attributions)
+        return self
 
     def normalize(self, vmin=None, vmax=None, clip=False):
         """
@@ -39,15 +45,20 @@ class FeatureAttributionExplanation(BaseExplanation):
             vmax = np.max(self.attributions)
         if clip:
             self.attributions = np.clip(self.attributions, a_min=vmin, a_max=vmax)
-        self.attributions = (self.attributions - vmin)/(vmin-vmax)
+        self.attributions = (self.attributions - vmin)/(vmax-vmin)
+        return self
 
-    def _visualize_tabular(self, *, feature_names=None, fig_axes: tuple = None, plot_mode: str='heatmap',
+    def reset_normalization(self):
+        self.attributions = deepcopy(self._unnormalized)
+
+    def _visualize_tabular(self, *, feature_names=None, y_labels=None, fig_axes: tuple = None, plot_mode: str='heatmap',
                            show=False, **kwargs):
         """
         Routine to visualize feature attributions for tabular data
 
         Args:
             feature_names: iterable containing the names of the features. Default: None.
+            y_labels: names to plot on the y-axis (features are assumed to be on the x-axis)
             fig_axes: tuple containing plt.Figure and plt.Axis instances where to plot the attributions
             plot_mode: string specifying how to plot the attributions. Available modes: 'barplot', 'heatmap'
             show: if True, plot the generated figure.
@@ -76,9 +87,10 @@ class FeatureAttributionExplanation(BaseExplanation):
         if plot_mode == 'barplot':
             sns.barplot(x=feature_names, y=self.attributions, **kwargs)
         else:
-            sns.heatmap(data=self.attributions, ax=ax, **kwargs)
+            sns.heatmap(data=self.attributions, **kwargs)
 
-        ax.set_xticklabels(feature_names)
+        ax.set_xticklabels(feature_names, rotation='vertical')
+        ax.set_yticklabels(y_labels, rotation='horizontal')
 
         if show:
             fig.show()
@@ -111,7 +123,7 @@ class FeatureAttributionExplanation(BaseExplanation):
             self.attributions = np.transpose(self.attributions, 0, 1)
             self.attributions = np.transpose(self.attributions, 1, 2)
 
-        attributions = np.sum(self.attributions, axis=2, keepdims=True)
+            self.attributions = np.sum(self.attributions, axis=2, keepdims=True)
 
         if image.shape[-1] > 3:
             image = np.transpose(image, 0, 1)
@@ -136,7 +148,7 @@ class FeatureAttributionExplanation(BaseExplanation):
 
         return fig, ax
 
-    def _visualize_text(self, *, tokens, delimiter=' ', fig_axes: tuple = None, n_colors = 20, show=False, hl_chars=('<', '>'), **kwargs):
+    def _visualize_text(self, *, tokens, delimiter=' ', fig_axes: tuple = None, n_colors = 20, show=False, as_logo=False, hl_chars=('<', '>'), **kwargs):
         """
         Routine to visualize feature attributions for tabular data
 
@@ -146,6 +158,7 @@ class FeatureAttributionExplanation(BaseExplanation):
             fig_axes: tuple containing plt.Figure and plt.Axis instances where to plot the attributions
             n_colors: number of bins to use to discretize the attributions for visualization
             show: if True, plot the generated figure.
+            as_logo: if True, visualize the attributions as a logo
             hl_chars: tuple containing the delimiters for highlighting the text according the attributions. Please refer to the
                         highlight_text documentation for further details. NOTE: characters not included in the vocabulary should
                         be used.
@@ -153,36 +166,44 @@ class FeatureAttributionExplanation(BaseExplanation):
             fig: plt.Figure
             ax: plt.Axis
         """
-        if len(tokens) != self.attributions.shape[-1]:
-            raise UserWarning('The number of tokens and attributions must correspond!')
-
-        cmap = kwargs.pop('cmap', 'bwr')
-        cmap = cm.get_cmap(cmap, n_colors)
-        list_cmap = [rgb2hex(cmap(i)) for i in range(cmap.N)]
-        attributions = np.digitize(self.attributions,
-                                   bins=np.linspace(np.min(self.attributions), np.max(self.attributions), num=n_colors, endpoint=True), right=False) - 1
+        self.attributions = np.squeeze(self.attributions)
 
         if fig_axes is None:
             fig, ax = plt.subplots()
         else:
             fig, ax  = fig_axes
 
-        s = []
-        colors = []
-        for i in range(len(tokens)):
-            s.append(hl_chars[0] + tokens[i] + hl_chars[1])
-            colors.append({"bbox": {"facecolor": list_cmap[attributions[i]], "linewidth": 0.2, "pad": 0.2, "edgecolor": list_cmap[attributions[i]]}})
-        s = delimiter.join(s)
-        HighlightText(0.5, 0.5, s=s, ha='center', va='center', highlight_textprops=colors, ax=ax, delim=hl_chars,
-                      fontsize=24)
-        ax.grid(False)
-        ax.axis('off')
+        if as_logo:
+            cols = list(set(tokens))
+            df = np.zeros([len(tokens), len(cols)])
+            for i, c in enumerate(tokens):
+                j = cols.index(c)
+                df[i, j] = self.attributions[i]
+            df = pd.DataFrame(df, columns=cols)
+            logo = logomaker.Logo(df, ax=ax)
+        else:
+            cmap = kwargs.pop('cmap', 'bwr')
+            cmap = cm.get_cmap(cmap, n_colors)
+            list_cmap = [rgb2hex(cmap(i)) for i in range(cmap.N)]
+            attributions = np.digitize(self.attributions,
+                                       bins=np.linspace(np.min(self.attributions), np.max(self.attributions), num=n_colors, endpoint=True), right=False) - 1
+
+
+            s = []
+            colors = []
+            for i in range(len(tokens)):
+                s.append(hl_chars[0] + tokens[i] + hl_chars[1])
+                colors.append({"bbox": {"facecolor": list_cmap[attributions[i]], "linewidth": 0.2, "pad": 0.2, "edgecolor": list_cmap[attributions[i]]}})
+            s = delimiter.join(s)
+            HighlightText(0.5, 0.5, s=s, ha='center', va='center', highlight_textprops=colors, ax=ax, delim=hl_chars,
+                          fontsize=24)
+            ax.grid(False)
+            ax.axis('off')
 
         if show:
             fig.show()
 
         return fig, ax
-
 
     def visualize_help(self):
         if self.data_type == DataType.TABULAR:
@@ -193,7 +214,6 @@ class FeatureAttributionExplanation(BaseExplanation):
             print(self._visualize_text.__doc__)
         else:
             raise RuntimeError('There might have been an error in setting the data type!')
-
 
     def visualize(self, *args, **kwargs):
         """
@@ -208,3 +228,40 @@ class FeatureAttributionExplanation(BaseExplanation):
         else:
             raise RuntimeError('There might have been an error in setting the data type!')
         return fig, ax
+
+
+def aggregate_attributions(attributions: list, mode='mean', data_type: DataType = None):
+    """
+    Routine to aggregate attributions
+
+    Args:
+        attributions (list): list of FeatureAttributionExplanation or np.ndarrays
+        mode (str): how to aggregate the attributions
+    """
+    AGGREGATIONS = {'mean', 'sum', 'max', 'none'}
+
+    if data_type is None:
+        for attribution in attributions:
+            if isinstance(attribution, FeatureAttributionExplanation):
+                data_type = attribution.data_type
+                break
+    if data_type is None:
+        raise ValueError("Cannot infer the data_type for your attributions! Please provide one!")
+
+    def fetch_attribution(attribution):
+        if isinstance(attribution, FeatureAttributionExplanation):
+            return attribution.attributions
+        elif isinstance(attribution, np.ndarray):
+            return attribution
+        else:
+            raise ValueError('Attributions should be either np arrays or FeatureAttributionExplanation!')
+
+    to_aggregate = [fetch_attribution(attr) for attr in attributions]
+
+    if mode in AGGREGATIONS:
+        if mode is not 'none':
+            return FeatureAttributionExplanation(getattr(np, mode)(to_aggregate, axis=0), data_type)
+        else:
+            return FeatureAttributionExplanation(np.concatenate(to_aggregate, axis=0), data_type)
+    else:
+        raise ValueError('Mode not valid! The only supported modes are {}'.format(AGGREGATIONS))
