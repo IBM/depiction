@@ -20,6 +20,10 @@ from collections import defaultdict
 from skimage.color import gray2rgb
 from matplotlib.colors import Normalize
 
+from lime.explanation import Explanation
+from lime.lime_image import ImageExplanation
+from depiction.explanations.feature_attribution import FeatureAttributionExplanation
+
 from ..base.base_interpreter import BaseInterpreter
 from ...core import Task, DataType
 
@@ -238,3 +242,33 @@ class UWasher(BaseInterpreter):
         elif hasattr(explanation, 'save_to_file'):
             explanation.save_to_file(path)
         return explanation
+
+
+def to_feature_attribution(explanation, data_type, as_label_map=False, labels: list = None):
+    """
+    Routine to turn LIME/Anchor explanations to DEPICTION explanations to use the library routines.
+
+    Args:
+        explanation: explanation to be transformed
+        as_label_map (bool): if False, return the attributions to np.ndarray where the rows denote the different classes.
+                             Otherwise it returns a dict where the labels are the keys.
+        labels (list): if as_label_map is False, and labels is defined return only the given labels
+                        in the order provided in the list
+    """
+    if isinstance(explanation, Explanation):
+        explanation = explanation.as_map()
+        exps = dict()
+        for l, attr in explanation.items():
+            exps[l] = np.array([v for k,v in sorted(attr, key=lambda x: x[0])])
+        if not as_label_map:
+            if labels is not None:
+                final_exps = []
+                for l in labels:
+                    if l in exps.keys():
+                        final_exps.append(exps[l])
+            else:
+                final_exps = [v for k, v in exps.items()]
+            exps = np.array(final_exps)
+        return FeatureAttributionExplanation(exps, data_type)
+    else:
+        raise NotImplementedError
