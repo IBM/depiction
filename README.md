@@ -6,6 +6,8 @@ A collection of tools and resources to interpret deep learning models in a frame
 
 The core of the repo is a package, called `depiction`, with wrappers around models and methods for interpretable deep learning.
 
+**DISCLAIMER**: This repo is undergoing a refactoring. For the latest developments (e.g. as shown in ISMB/ECCB 21), please check the other branches, in particular `visualizations`.
+
 ## Docker setup
 
 ### Install docker
