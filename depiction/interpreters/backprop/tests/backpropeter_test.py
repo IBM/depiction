@@ -16,6 +16,7 @@ from depiction.models.torch.core import TorchModel
 from depiction.models.keras.core import KerasModel
 from depiction.models.base.base_model import BaseModel
 from depiction.interpreters.backprop.backpropeter import BackPropeter
+from depiction.explanations.feature_attribution import FeatureAttributionExplanation
 
 
 INPUT_SZ = 5
@@ -127,16 +128,18 @@ class BackPropeterTestCase(unittest.TestCase):
             } 
             allowed_kwargs = interpret_kwargs.keys() & set(args)
             res = interpreter.interpret(x, explanation_configs={arg: interpret_kwargs[arg] for arg in allowed_kwargs})
-            self.assertIsInstance(res, torch.Tensor)
+            self.assertIsInstance(res, list)
+            for r in res:
+                self.assertIsInstance(r, FeatureAttributionExplanation)
 
             # -- -- with delta
             if interpreter._explainer.has_convergence_delta():
                 interpret_kwargs['return_convergence_delta'] = True
                 allowed_kwargs = interpret_kwargs.keys() & set(args)
                 res = interpreter.interpret(x, explanation_configs={arg: interpret_kwargs[arg] for arg in allowed_kwargs})
-                self.assertIsInstance(res, tuple)
-                self.assertIsInstance(res[0], torch.Tensor)            
-                self.assertIsInstance(res[1], torch.Tensor)
+                self.assertIsInstance(res, list)
+                for r in res:
+                    self.assertIsInstance(r, FeatureAttributionExplanation)
 
         # test keras model
         for m in BackPropeter.METHODS['keras'].keys():
