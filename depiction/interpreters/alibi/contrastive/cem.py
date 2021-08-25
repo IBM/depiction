@@ -132,4 +132,4 @@ class CEM(BaseInterpreter):
           no_info_type (str, optional): 'median' or 'mean' value by feature
             supported. Defaults to 'median'.
         """
-        self.explainer.fit()
+        self.explainer.fit(train_data, no_info_type)
