@@ -21,8 +21,8 @@ import numpy as np
 from matplotlib.colors import Normalize
 from depiction.explanations.feature_attribution import FeatureAttributionExplanation
 
-from ...core import DataType, Task
-from ..base.base_interpreter import BaseInterpreter
+from depiction.core import DataType, Task
+from depiction.interpreters.base.base_interpreter import BaseInterpreter
 from depiction.models.torch.core import TorchModel
 from depiction.models.keras.core import KerasModel
 

@@ -2,8 +2,8 @@
 from tensorflow import keras
 from tensorflow.keras.utils import to_categorical
 
-from ...uri.cache.http_model import HTTPModel
-from ....core import Task, DataType
+from depiction.models.uri.cache.http_model import HTTPModel
+from depiction.core import Task, DataType
 
 
 def one_hot_encoding(classes):

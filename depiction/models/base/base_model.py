@@ -1,7 +1,7 @@
 """Abstract interface for models."""
 from abc import ABC, abstractmethod
 
-from ...core import Task, DataType
+from depiction.core import Task, DataType
 
 
 class BaseModel(ABC):

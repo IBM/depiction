@@ -5,8 +5,8 @@ from spacy.vocab import Vocab
 from spacy.language import Language
 from concise.preprocessing.sequence import encodeDNA, encodeRNA
 
-from ....core import Task, DataType
-from ...kipoi.core import KipoiModel
+from depiction.core import Task, DataType
+from depiction.models.kipoi.core import KipoiModel
 
 DEEPBIND_CLASSES = ['NotBinding', 'Binding']
 ALPHABET = {'TF': ['T', 'C', 'G', 'A', 'N'], 'RBP': ['U', 'C', 'G', 'A', 'N']}

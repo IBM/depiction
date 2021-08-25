@@ -3,7 +3,7 @@ import os
 import copy
 from minio import Minio
 
-from .cache_model import CacheModel
+from depiction.models.uri.cache.cache_model import CacheModel
 
 
 class COSModel(CacheModel):

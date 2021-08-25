@@ -2,8 +2,8 @@
 import os
 from abc import abstractclassmethod
 
-from ..uri_model import URIModel
-from ...base.utils import MODELS_SUBDIR
+from depiction.models.uri.uri_model import URIModel
+from depiction.models.base.utils import MODELS_SUBDIR
 
 
 class CacheModel(URIModel):

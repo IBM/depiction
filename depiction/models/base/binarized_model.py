@@ -1,8 +1,8 @@
 """Binarized model."""
 import numpy as np
 
-from .base_model import BaseModel
-from ...core import Task
+from depiction.models.base.base_model import BaseModel
+from depiction.core import Task
 
 
 class BinarizedClassifier(BaseModel):

@@ -1,4 +1,4 @@
 """PaccMann initialization."""
-from .core import (  # noqa
+from depiction.models.examples.paccmann.core import (  # noqa
     PaccMann, PaccMannCellLine, PaccMannSmiles
 )

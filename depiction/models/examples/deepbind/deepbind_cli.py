@@ -9,8 +9,8 @@ from spacy.tokens import Doc
 from spacy.vocab import Vocab
 from spacy.language import Language
 
-from ....core import Task, DataType
-from ...uri.cache.http_model import HTTPModel
+from depiction.core import Task, DataType
+from depiction.models.uri.cache.http_model import HTTPModel
 
 DEEPBIND_CLASSES = ['NotBinding', 'Binding']
 SEQ_FILE_EXTENSION = '.seq'

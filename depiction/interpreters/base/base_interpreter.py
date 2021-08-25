@@ -2,8 +2,8 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 
-from ...core import Task
-from ...models.base.base_model import BaseModel, TrainableModel
+from depiction.core import Task
+from depiction.models.base.base_model import BaseModel, TrainableModel
 
 
 class TransparencyType(Enum):

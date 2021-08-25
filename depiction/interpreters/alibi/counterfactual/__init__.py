@@ -1,2 +1,2 @@
 """Intialize conterfactual module."""
-from .counterfactual import Counterfactual  # noqa
+from depiction.interpreters.alibi.counterfactual.counterfactual import Counterfactual  # noqa

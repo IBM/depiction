@@ -1,6 +1,6 @@
 """Initialize uri module."""
-from .cache import FileSystemModel  # noqa
-from .cache import HTTPModel  # noqa
-from .cache import COSModel  # noqa
-from .rest_api import RESTAPIModel  # noqa
-from .rest_api import MAXModel  # noqa
+from depiction.models.uri.cache import FileSystemModel  # noqa
+from depiction.models.uri.cache import HTTPModel  # noqa
+from depiction.models.uri.cache import COSModel  # noqa
+from depiction.models.uri.rest_api import RESTAPIModel  # noqa
+from depiction.models.uri.rest_api import MAXModel  # noqa

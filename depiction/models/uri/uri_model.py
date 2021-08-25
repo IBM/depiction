@@ -1,5 +1,5 @@
 """Abstract interface for URI models."""
-from ..base.base_model import BaseModel
+from depiction.models.base.base_model import BaseModel
 
 
 class URIModel(BaseModel):

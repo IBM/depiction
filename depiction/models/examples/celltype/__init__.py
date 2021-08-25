@@ -1,1 +1,1 @@
-from .celltype import CellTyper  # noqa
+from depiction.models.examples.celltype.celltype import CellTyper  # noqa

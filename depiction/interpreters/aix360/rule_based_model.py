@@ -16,8 +16,8 @@ from aix360.algorithms.rbm import (
 )
 from aix360.algorithms.rbm import FeatureBinarizer
 
-from ...core import Task, DataType
-from ..base.base_interpreter import AnteHocInterpreter, ExplanationType
+from depiction.core import Task, DataType
+from depiction.interpreters.base.base_interpreter import AnteHocInterpreter, ExplanationType
 
 
 class RuleAIX360(AnteHocInterpreter):

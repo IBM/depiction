@@ -24,8 +24,8 @@ from lime.explanation import Explanation
 from lime.lime_image import ImageExplanation
 from depiction.explanations.feature_attribution import FeatureAttributionExplanation
 
-from ..base.base_interpreter import BaseInterpreter
-from ...core import Task, DataType
+from depiction.interpreters.base.base_interpreter import BaseInterpreter
+from depiction.core import Task, DataType
 
 
 def show_image_in_notebook_for_lime(explanation, image, callback, labels=None, top_k=4, nperrow=2):

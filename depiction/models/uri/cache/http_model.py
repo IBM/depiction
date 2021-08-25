@@ -1,6 +1,6 @@
 """Abstract interface for HTTP models."""
-from .cache_model import CacheModel
-from ...base.utils import get_model_file
+from depiction.models.uri.cache.cache_model import CacheModel
+from depiction.models.base.utils import get_model_file
 
 
 class HTTPModel(CacheModel):

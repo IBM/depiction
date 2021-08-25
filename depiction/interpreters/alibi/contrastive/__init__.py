@@ -1,2 +1,2 @@
 """Initialize contrastive explainer."""
-from .cem import CEM  # noqa
+from depiction.interpreters.alibi.contrastive.cem import CEM  # noqa

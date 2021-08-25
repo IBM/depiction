@@ -1,8 +1,8 @@
 """MAX Toxic Comment Classifier."""
 import numpy as np
 
-from ...core import Task, DataType
-from ..uri.rest_api.max_model import MAXModel
+from depiction.core import Task, DataType
+from depiction.models.uri.rest_api.max_model import MAXModel
 
 
 class ToxicCommentClassifier(MAXModel):

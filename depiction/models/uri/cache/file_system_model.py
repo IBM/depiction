@@ -1,5 +1,5 @@
 """Abstract interface for file system models."""
-from .cache_model import CacheModel
+from depiction.models.uri.cache.cache_model import CacheModel
 
 
 class FileSystemModel(CacheModel):

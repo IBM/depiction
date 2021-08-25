@@ -6,8 +6,8 @@ References:
 """
 from alibi.explainers import CEM as CEMImplementation
 
-from ....core import DataType, Task
-from ...base.base_interpreter import BaseInterpreter
+from depiction.core import DataType, Task
+from depiction.interpreters.base.base_interpreter import BaseInterpreter
 
 
 class CEM(BaseInterpreter):

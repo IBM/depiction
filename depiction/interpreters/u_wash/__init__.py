@@ -1,2 +1,2 @@
 """Initialize University of Washington models."""
-from .u_washer import UWasher  # noqa
+from depiction.interpreters.u_wash.u_washer import UWasher  # noqa
