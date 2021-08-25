@@ -23,3 +23,4 @@ highlight-text==0.2
 anchor_custom @ git+https://github.com/phineasng/anchor@6419bbdfb46b3f1c0d7738e521623856b92bf5af#egg=anchor_custom-0.0.0.5
 paccmann @ git+https://github.com/drugilsberg/paccmann@77eaedb860b66c32d541398c32caa34e93b7c443#egg=paccmann-0.1
 deepexplain @ git+https://github.com/marcoancona/DeepExplain.git#egg=deepexplain
+logomaker==0.8
