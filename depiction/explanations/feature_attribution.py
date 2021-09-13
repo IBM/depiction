@@ -90,9 +90,11 @@ class FeatureAttributionExplanation(BaseExplanation):
             sns.heatmap(data=self.attributions, **kwargs)
 
         ax.set_xticklabels(feature_names, rotation='vertical')
-        ax.set_yticklabels(y_labels, rotation='horizontal')
+        if y_labels is not None:
+            ax.set_yticklabels(y_labels, rotation='horizontal')
 
         if show:
+            plt.tight_layout()
             fig.show()
 
         return fig, ax
