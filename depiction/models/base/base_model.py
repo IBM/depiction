@@ -1,5 +1,6 @@
 """Abstract interface for models."""
 from abc import ABC, abstractmethod
+from types import GeneratorType
 
 from depiction.core import Task, DataType
 
@@ -32,12 +33,12 @@ class BaseModel(ABC):
         Returns:
             a function taking a sample an input and returning the prediction.
         """
-        return lambda sample: self.predict(sample, *args, **kwargs)
+        return lambda sample: self._predict(sample, *args, **kwargs)
 
     @abstractmethod
-    def predict(self, sample, *args, **kwargs):
+    def _predict(self, sample, *args, **kwargs):
         """
-        Run the model for inference on a given sample and with the provided
+        Run the model for inference on a given batched sample and with the provided
         parameters.
 
         Args:
@@ -48,7 +49,12 @@ class BaseModel(ABC):
         Returns:
             a prediction for the model on the given sample.
         """
-        raise NotImplementedError
+
+    def predict(self, sample, *args, **kwargs):
+        if isinstance(sample, GeneratorType):
+            return self.predict_many(sample, *args, **kwargs)
+        else:
+            return self._predict(sample, *args, **kwargs)
 
     def predict_many(self, samples, *args, **kwargs):
         """
@@ -64,7 +70,7 @@ class BaseModel(ABC):
             a generator of predictions.
         """
         for sample in samples:
-            yield self.predict(sample, *args, **kwargs)
+            yield self._predict(sample, *args, **kwargs)
 
 
 class TrainableModel(BaseModel):
