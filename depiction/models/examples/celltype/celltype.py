@@ -55,7 +55,7 @@ class CellTyper(HTTPModel):
         )
         self.model = keras.models.load_model(self.model_path)
 
-    def predict(self, sample, *args, **kwargs):
+    def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
         parameters.

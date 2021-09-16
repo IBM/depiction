@@ -77,7 +77,7 @@ class KipoiModel(BaseModel):
             sample, **self.preprocessing_kwargs
         )
 
-    def predict(self, sample):
+    def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample. The sample is
         preprocessed and output postprocessed.

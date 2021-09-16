@@ -120,7 +120,7 @@ class DeepBind(KipoiModel):
         self.sequence_type = model.split('/')[2]  # 'TF' or 'RBP'
         self.min_length = min_length
 
-    def predict(self, sample):
+    def _predict(self, sample, *args, **kwargs):
         self.preprocessing_kwargs['sequence_type'] = self.sequence_type
         self.preprocessing_kwargs['min_length'] = self.min_length
         self.postprocessing_kwargs['use_labels'] = self.use_labels

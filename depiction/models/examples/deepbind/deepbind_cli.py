@@ -126,7 +126,7 @@ class DeepBind(HTTPModel):
                 model_tar.extractall(self.save_dir)
         self.exec_path = os.path.join(self.model_dir, 'deepbind')
 
-    def predict(self, sample, *args, **kwargs):
+    def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
         parameters.

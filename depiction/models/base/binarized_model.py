@@ -20,7 +20,7 @@ class BinarizedClassifier(BaseModel):
         self.model = model
         self.label_index = label_index
 
-    def predict(self, sample, *args, **kwargs):
+    def _predict(self, sample, *args, **kwargs):
         """
         Run the model for inference on a given sample and with the provided
         parameters.
