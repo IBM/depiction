@@ -34,7 +34,7 @@ class BaseModelTestCase(unittest.TestCase):
             choice(list(Task)), choice(list(DataType))
         )
 
-        with mock.patch.object(concrete_model, 'predict') as mock_predict:
+        with mock.patch.object(concrete_model, '_predict') as mock_predict:
             test_kwarg = {'test_kwarg': 'test'}
             callback = concrete_model.callback(**test_kwarg)
             test_sample = 10
@@ -46,7 +46,7 @@ class BaseModelTestCase(unittest.TestCase):
             choice(list(Task)), choice(list(DataType))
         )
 
-        with mock.patch.object(concrete_model, 'predict') as mock_predict:
+        with mock.patch.object(concrete_model, '_predict') as mock_predict:
             test_kwarg = {'test_kwarg': 'test'}
             test_samples = range(10)
             for res in concrete_model.predict_many(test_samples, **test_kwarg):

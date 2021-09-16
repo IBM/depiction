@@ -179,5 +179,5 @@ class RuleAIX360(AnteHocInterpreter):
             with open(path, 'wb') as f:
                 pickle.dump(explanation, f)
 
-    def predict(self, X, **kwargs):
+    def _predict(self, X, **kwargs):
         self.explainer.predict(X, **kwargs)
