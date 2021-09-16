@@ -11,7 +11,7 @@ class ConcreteTestModel(BaseModel):
     def __init__(self, task_type, data_type):
         super(ConcreteTestModel, self).__init__(task_type, data_type)
 
-    def predict(self, sample, *, test_kwarg):
+    def _predict(self, sample, *, test_kwarg):
         return sample
 
 

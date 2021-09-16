@@ -11,7 +11,7 @@ from depiction.models.base.base_model import BaseModel
 
 class DummyModel(BaseModel):
 
-    def predict(self, sample):
+    def _predict(self, sample, *args, **kwargs):
         return sample
 
 
