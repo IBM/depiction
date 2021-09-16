@@ -16,7 +16,7 @@ class SKLearnModel(BaseModel):
         super().__init__(Task.CLASSIFICATION, DataType.TABULAR)
         self.clf = clf
 
-    def predict(self, X):
+    def _predict(self, X):
         return self.clf.predict_proba(X)
 
 

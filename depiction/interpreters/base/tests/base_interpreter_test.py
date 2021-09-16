@@ -19,7 +19,7 @@ class ConcreteAnteHocInterpreter(AnteHocInterpreter):
     SUPPORTED_TASK = set(Task)
     SUPPORTED_DATATYPE = set(DataType)
 
-    def predict(self, sample):
+    def _predict(self, sample, *args, **kwargs):
         return sample
 
     def _fit_antehoc(self, X, y):
@@ -34,7 +34,7 @@ class ConcreteAnteHocInterpreter(AnteHocInterpreter):
 
 class DummyModel(BaseModel):
 
-    def predict(self, sample):
+    def _predict(self, sample):
         return sample
 
 

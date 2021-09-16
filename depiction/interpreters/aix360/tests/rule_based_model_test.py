@@ -16,7 +16,7 @@ from depiction.models.base.base_model import BaseModel
 
 class DummyModel(BaseModel):
 
-    def predict(self, sample):
+    def _predict(self, sample, *args, **kwargs):
         return np.array([choice([0, 1]) for _ in range(sample.shape[0])])
 
 

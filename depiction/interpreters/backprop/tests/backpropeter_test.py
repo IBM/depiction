@@ -24,7 +24,7 @@ OUTPUT_SZ = 7
 
 
 class DummyModel(BaseModel):
-    def predict(self, sample):
+    def _predict(self, sample, *args, **kwargs):
         return None
 
 
